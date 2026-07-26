@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../cart/presentation/providers/cart_notifier.dart';
+import '../../../wishlist/presentation/providers/wishlist_notifier.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/entities/product_review.dart';
 import '../providers/product_detail_provider.dart';
@@ -42,6 +44,10 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
         error: (error, stackTrace) => Center(child: Text('Failed to load product')),
         data: (product) => _buildContent(context, product),
       ),
+      bottomNavigationBar: productAsync.maybeWhen(
+        data: (product) => _AddToCartBar(product: product),
+        orElse: () => null,
+      ),
     );
   }
 
@@ -53,6 +59,26 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
         SliverAppBar(
           expandedHeight: 340,
           pinned: true,
+          actions: [
+            Consumer(
+              builder: (context, ref, child) {
+                final wishlist = ref.watch(wishlistProvider).value ?? const [];
+                final isWishlisted = wishlist.any((item) => item.productId == product.id);
+                return IconButton(
+                  icon: Icon(
+                    isWishlisted ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                    color: isWishlisted ? Colors.red : null,
+                  ),
+                  onPressed: () => ref.read(wishlistProvider.notifier).toggle(
+                        productId: product.id,
+                        title: product.title,
+                        thumbnail: product.thumbnail,
+                        price: product.price,
+                      ),
+                );
+              },
+            ),
+          ],
           flexibleSpace: FlexibleSpaceBar(
             background: Stack(
               fit: StackFit.expand,
@@ -160,6 +186,40 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _AddToCartBar extends ConsumerWidget {
+  const _AddToCartBar({required this.product});
+
+  final Product product;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: FilledButton.icon(
+          onPressed: !product.inStock
+              ? null
+              : () async {
+                  await ref.read(cartProvider.notifier).addItem(
+                        productId: product.id,
+                        title: product.title,
+                        thumbnail: product.thumbnail,
+                        price: product.discountedPrice,
+                      );
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(const SnackBar(content: Text('Added to cart')));
+                  }
+                },
+          icon: const Icon(Icons.shopping_bag_outlined),
+          label: Text(product.inStock ? 'Add to cart' : 'Out of stock'),
+        ),
+      ),
     );
   }
 }

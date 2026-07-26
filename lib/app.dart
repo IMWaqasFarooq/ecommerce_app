@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/config/flavor.dart';
 import 'core/router/app_router.dart';
+import 'core/sync/guest_data_sync_observer.dart';
 import 'core/theme/app_theme.dart';
 
 class VeloraApp extends ConsumerWidget {
@@ -12,6 +13,7 @@ class VeloraApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(guestDataSyncObserverProvider);
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(

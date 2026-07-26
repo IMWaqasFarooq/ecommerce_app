@@ -1,19 +1,24 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_spacing.dart';
+import '../../../wishlist/presentation/providers/wishlist_notifier.dart';
 import '../../domain/entities/product.dart';
 import 'price_tag.dart';
 import 'rating_stars.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductCard extends ConsumerWidget {
   const ProductCard({required this.product, required this.onTap, super.key});
 
   final Product product;
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final wishlist = ref.watch(wishlistProvider).value ?? const [];
+    final isWishlisted = wishlist.any((item) => item.productId == product.id);
+
     return Card(
       clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.zero,
@@ -54,6 +59,24 @@ class ProductCard extends StatelessWidget {
                         ),
                       ),
                     ),
+                  Positioned(
+                    top: AppSpacing.xxs,
+                    right: AppSpacing.xxs,
+                    child: IconButton.filledTonal(
+                      visualDensity: VisualDensity.compact,
+                      icon: Icon(
+                        isWishlisted ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                        color: isWishlisted ? Colors.red : null,
+                        size: 18,
+                      ),
+                      onPressed: () => ref.read(wishlistProvider.notifier).toggle(
+                            productId: product.id,
+                            title: product.title,
+                            thumbnail: product.thumbnail,
+                            price: product.price,
+                          ),
+                    ),
+                  ),
                 ],
               ),
             ),

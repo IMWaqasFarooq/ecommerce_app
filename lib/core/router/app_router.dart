@@ -6,12 +6,12 @@ import '../../features/authentication/presentation/pages/login_page.dart';
 import '../../features/authentication/presentation/pages/signup_page.dart';
 import '../../features/authentication/presentation/pages/splash_page.dart';
 import '../../features/authentication/presentation/providers/auth_state_provider.dart';
-import '../../features/cart/presentation/pages/cart_placeholder_page.dart';
+import '../../features/cart/presentation/pages/cart_page.dart';
 import '../../features/products/presentation/pages/product_detail_page.dart';
 import '../../features/products/presentation/pages/product_list_page.dart';
 import '../../features/profile/presentation/pages/profile_placeholder_page.dart';
 import '../../features/search/presentation/pages/search_page.dart';
-import '../../features/wishlist/presentation/pages/wishlist_placeholder_page.dart';
+import '../../features/wishlist/presentation/pages/wishlist_page.dart';
 import 'main_shell.dart';
 import 'route_paths.dart';
 
@@ -90,7 +90,7 @@ GoRouter router(Ref ref) {
               GoRoute(
                 path: RoutePaths.wishlist,
                 name: RouteNames.wishlist,
-                builder: (context, state) => const WishlistPlaceholderPage(),
+                builder: (context, state) => const WishlistPage(),
               ),
             ],
           ),
@@ -99,7 +99,7 @@ GoRouter router(Ref ref) {
               GoRoute(
                 path: RoutePaths.cart,
                 name: RouteNames.cart,
-                builder: (context, state) => const CartPlaceholderPage(),
+                builder: (context, state) => const CartPage(),
               ),
             ],
           ),
