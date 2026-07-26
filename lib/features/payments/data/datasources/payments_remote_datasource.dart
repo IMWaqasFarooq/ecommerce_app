@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
 
 abstract class PaymentsRemoteDataSource {
-  Future<String> createPaymentIntentClientSecret({required int amountInSmallestUnit, required String currency});
+  Future<String> createPaymentIntentClientSecret({
+    required int amountInSmallestUnit,
+    required String currency,
+  });
 }
 
 class PaymentsRemoteDataSourceImpl implements PaymentsRemoteDataSource {

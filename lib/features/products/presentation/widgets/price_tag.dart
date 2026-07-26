@@ -12,7 +12,9 @@ class PriceTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final priceStyle = large ? AppTextStyles.priceLarge(context) : AppTextStyles.priceMedium(context);
+    final priceStyle = large
+        ? AppTextStyles.priceLarge(context)
+        : AppTextStyles.priceMedium(context);
 
     if (!product.hasDiscount) {
       return Text('\$${product.price.toStringAsFixed(2)}', style: priceStyle);
@@ -23,7 +25,10 @@ class PriceTag extends StatelessWidget {
       spacing: 8,
       children: [
         Text('\$${product.discountedPrice.toStringAsFixed(2)}', style: priceStyle),
-        Text('\$${product.price.toStringAsFixed(2)}', style: AppTextStyles.priceStrikethrough(context)),
+        Text(
+          '\$${product.price.toStringAsFixed(2)}',
+          style: AppTextStyles.priceStrikethrough(context),
+        ),
         if (large)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -33,7 +38,11 @@ class PriceTag extends StatelessWidget {
             ),
             child: Text(
               '-${product.discountPercentage.round()}%',
-              style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
       ],

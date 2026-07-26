@@ -5,13 +5,11 @@ import 'app_colors.dart';
 import 'app_spacing.dart';
 
 abstract final class AppTheme {
-  static ThemeData light() => _themeFrom(
-        ColorScheme.fromSeed(seedColor: AppColors.seed, brightness: Brightness.light),
-      );
+  static ThemeData light() =>
+      _themeFrom(ColorScheme.fromSeed(seedColor: AppColors.seed, brightness: Brightness.light));
 
-  static ThemeData dark() => _themeFrom(
-        ColorScheme.fromSeed(seedColor: AppColors.seed, brightness: Brightness.dark),
-      );
+  static ThemeData dark() =>
+      _themeFrom(ColorScheme.fromSeed(seedColor: AppColors.seed, brightness: Brightness.dark));
 
   static ThemeData _themeFrom(ColorScheme scheme) {
     return ThemeData(
@@ -44,8 +42,10 @@ abstract final class AppTheme {
           borderRadius: BorderRadius.circular(AppSpacing.sm),
           borderSide: BorderSide.none,
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: scheme.surface,

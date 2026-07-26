@@ -38,8 +38,11 @@ class ProductListNotifier extends _$ProductListNotifier {
         GetProductsParams(page: page, limit: _perPage),
       );
       result.fold(
-        (failure) =>
-            state = state.copyWith(status: ProductListStatus.failure, failure: failure, isLoadingMore: false),
+        (failure) => state = state.copyWith(
+          status: ProductListStatus.failure,
+          failure: failure,
+          isLoadingMore: false,
+        ),
         (data) => state = state.copyWith(
           status: ProductListStatus.success,
           products: append ? [...state.products, ...data.products] : data.products,
@@ -52,8 +55,11 @@ class ProductListNotifier extends _$ProductListNotifier {
     } else {
       final result = await ref.read(getProductsByCategoryUseCaseProvider)(category);
       result.fold(
-        (failure) =>
-            state = state.copyWith(status: ProductListStatus.failure, failure: failure, isLoadingMore: false),
+        (failure) => state = state.copyWith(
+          status: ProductListStatus.failure,
+          failure: failure,
+          isLoadingMore: false,
+        ),
         (products) => state = state.copyWith(
           status: ProductListStatus.success,
           products: products,

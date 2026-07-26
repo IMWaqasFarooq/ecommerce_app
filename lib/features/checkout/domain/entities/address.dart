@@ -22,7 +22,13 @@ class Address extends Equatable {
   final String phone;
 
   String get formatted {
-    final parts = [fullName, line1, if (line2 != null && line2!.isNotEmpty) line2, '$city, $state $postalCode', country];
+    final parts = [
+      fullName,
+      line1,
+      if (line2 != null && line2!.isNotEmpty) line2,
+      '$city, $state $postalCode',
+      country,
+    ];
     return parts.join('\n');
   }
 

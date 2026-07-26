@@ -36,7 +36,9 @@ void main() {
 
   final processingOrder = OrderModel(
     id: 'order-1',
-    items: const [OrderItemModel(productId: 1, title: 'Mascara', thumbnail: 't', price: 9.99, quantity: 1)],
+    items: const [
+      OrderItemModel(productId: 1, title: 'Mascara', thumbnail: 't', price: 9.99, quantity: 1),
+    ],
     subtotal: 9.99,
     discount: 0,
     shippingCost: 4.99,
@@ -65,7 +67,9 @@ void main() {
 
     expect(
       result,
-      const Left<Failure, dynamic>(Failure.validation(message: 'Only processing orders can be cancelled')),
+      const Left<Failure, dynamic>(
+        Failure.validation(message: 'Only processing orders can be cancelled'),
+      ),
     );
     verifyNever(() => localDataSource.saveOrders(any(), any()));
   });
@@ -78,7 +82,8 @@ void main() {
 
     expect(result.isRight(), isTrue);
     final captured =
-        verify(() => localDataSource.saveOrders('user-1', captureAny())).captured.single as List<OrderModel>;
+        verify(() => localDataSource.saveOrders('user-1', captureAny())).captured.single
+            as List<OrderModel>;
     expect(captured.single.status, OrderStatus.cancelled);
   });
 

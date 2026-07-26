@@ -12,12 +12,12 @@ class AddToCartUseCase implements UseCase<Cart, AddToCartParams> {
 
   @override
   Future<Either<Failure, Cart>> call(AddToCartParams params) => _repository.addItem(
-        productId: params.productId,
-        title: params.title,
-        thumbnail: params.thumbnail,
-        price: params.price,
-        quantity: params.quantity,
-      );
+    productId: params.productId,
+    title: params.title,
+    thumbnail: params.thumbnail,
+    price: params.price,
+    quantity: params.quantity,
+  );
 }
 
 class AddToCartParams extends Equatable {

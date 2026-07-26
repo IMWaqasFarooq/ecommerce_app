@@ -45,7 +45,9 @@ class WishlistPage extends ConsumerWidget {
                 subtitle: Text('\$${item.price.toStringAsFixed(2)}'),
                 trailing: IconButton(
                   icon: const Icon(Icons.favorite_rounded, color: Colors.red),
-                  onPressed: () => ref.read(wishlistProvider.notifier).toggle(
+                  onPressed: () => ref
+                      .read(wishlistProvider.notifier)
+                      .toggle(
                         productId: item.productId,
                         title: item.title,
                         thumbnail: item.thumbnail,

@@ -19,10 +19,8 @@ class MainShell extends ConsumerWidget {
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: (index) => navigationShell.goBranch(
-          index,
-          initialLocation: index == navigationShell.currentIndex,
-        ),
+        onDestinationSelected: (index) =>
+            navigationShell.goBranch(index, initialLocation: index == navigationShell.currentIndex),
         destinations: [
           const NavigationDestination(
             icon: Icon(Icons.storefront_outlined),

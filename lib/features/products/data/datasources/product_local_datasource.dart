@@ -25,11 +25,7 @@ class ProductLocalDataSourceImpl implements ProductLocalDataSource {
   }
 
   @override
-  Future<void> cacheProducts(
-    List<ProductModel> products, {
-    required int page,
-    required int limit,
-  }) {
+  Future<void> cacheProducts(List<ProductModel> products, {required int page, required int limit}) {
     return _box.put('products_page_${page}_$limit', products.map((p) => p.toJson()).toList());
   }
 

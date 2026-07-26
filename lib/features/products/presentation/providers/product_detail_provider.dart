@@ -11,11 +11,9 @@ Future<Product> productDetail(Ref ref, int productId) async {
   final result = await ref.watch(getProductDetailUseCaseProvider)(productId);
   final product = result.fold((failure) => throw failure, (product) => product);
 
-  await ref.read(analyticsServiceProvider).logViewProduct(
-        productId: product.id,
-        name: product.title,
-        price: product.price,
-      );
+  await ref
+      .read(analyticsServiceProvider)
+      .logViewProduct(productId: product.id, name: product.title, price: product.price);
 
   return product;
 }

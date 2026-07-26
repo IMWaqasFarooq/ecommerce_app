@@ -15,7 +15,9 @@ class AddressLocalDataSourceImpl implements AddressLocalDataSource {
   List<AddressModel> getAddresses(String ownerKey) {
     final raw = _box.get('addresses_$ownerKey') as List<dynamic>?;
     if (raw == null) return const [];
-    return raw.map((json) => AddressModel.fromJson(Map<String, dynamic>.from(json as Map))).toList();
+    return raw
+        .map((json) => AddressModel.fromJson(Map<String, dynamic>.from(json as Map)))
+        .toList();
   }
 
   @override

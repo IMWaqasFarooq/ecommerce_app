@@ -17,43 +17,42 @@ class AuthController extends _$AuthController {
   FutureOr<void> build() {}
 
   Future<void> signInWithGoogle() => _run(
-        () => ref.read(signInWithGoogleUseCaseProvider)(const NoParams()),
-        onSuccess: () => ref.read(analyticsServiceProvider).logLogin('google'),
-      );
+    () => ref.read(signInWithGoogleUseCaseProvider)(const NoParams()),
+    onSuccess: () => ref.read(analyticsServiceProvider).logLogin('google'),
+  );
 
   Future<void> signInWithApple() => _run(
-        () => ref.read(signInWithAppleUseCaseProvider)(const NoParams()),
-        onSuccess: () => ref.read(analyticsServiceProvider).logLogin('apple'),
-      );
+    () => ref.read(signInWithAppleUseCaseProvider)(const NoParams()),
+    onSuccess: () => ref.read(analyticsServiceProvider).logLogin('apple'),
+  );
 
   Future<void> signInWithEmailPassword({required String email, required String password}) => _run(
-        () => ref.read(signInWithEmailPasswordUseCaseProvider)(
-          SignInParams(email: email, password: password),
-        ),
-        onSuccess: () => ref.read(analyticsServiceProvider).logLogin('password'),
-      );
+    () => ref.read(signInWithEmailPasswordUseCaseProvider)(
+      SignInParams(email: email, password: password),
+    ),
+    onSuccess: () => ref.read(analyticsServiceProvider).logLogin('password'),
+  );
 
   Future<void> signUpWithEmailPassword({
     required String email,
     required String password,
     required String displayName,
-  }) =>
-      _run(
-        () => ref.read(signUpWithEmailPasswordUseCaseProvider)(
-          SignUpParams(email: email, password: password, displayName: displayName),
-        ),
-        onSuccess: () => ref.read(analyticsServiceProvider).logSignUp('password'),
-      );
+  }) => _run(
+    () => ref.read(signUpWithEmailPasswordUseCaseProvider)(
+      SignUpParams(email: email, password: password, displayName: displayName),
+    ),
+    onSuccess: () => ref.read(analyticsServiceProvider).logSignUp('password'),
+  );
 
-  Future<void> sendPasswordResetEmail(String email) => _run(
-        () => ref.read(sendPasswordResetEmailUseCaseProvider)(email),
-      );
+  Future<void> sendPasswordResetEmail(String email) =>
+      _run(() => ref.read(sendPasswordResetEmailUseCaseProvider)(email));
 
-  Future<void> signOut() => _run(
-        () => ref.read(signOutUseCaseProvider)(const NoParams()),
-      );
+  Future<void> signOut() => _run(() => ref.read(signOutUseCaseProvider)(const NoParams()));
 
-  Future<void> _run<T>(Future<Either<Failure, T>> Function() action, {Future<void> Function()? onSuccess}) async {
+  Future<void> _run<T>(
+    Future<Either<Failure, T>> Function() action, {
+    Future<void> Function()? onSuccess,
+  }) async {
     state = const AsyncLoading();
     final result = await action();
     state = result.fold(

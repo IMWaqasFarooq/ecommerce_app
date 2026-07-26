@@ -29,7 +29,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
-    ref.read(authControllerProvider.notifier).signUpWithEmailPassword(
+    ref
+        .read(authControllerProvider.notifier)
+        .signUpWithEmailPassword(
           email: _emailController.text,
           password: _passwordController.text,
           displayName: _nameController.text,
@@ -94,7 +96,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                       },
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                          _obscurePassword
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
                         ),
                         onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                       ),

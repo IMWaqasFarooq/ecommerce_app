@@ -36,8 +36,10 @@ class ProductCard extends ConsumerWidget {
                     child: CachedNetworkImage(
                       imageUrl: product.thumbnail,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(color: Theme.of(context).colorScheme.surfaceContainerHighest),
-                      errorWidget: (context, url, error) => const Icon(Icons.image_not_supported_outlined),
+                      placeholder: (context, url) =>
+                          Container(color: Theme.of(context).colorScheme.surfaceContainerHighest),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.image_not_supported_outlined),
                     ),
                   ),
                   if (!product.inStock)
@@ -69,7 +71,9 @@ class ProductCard extends ConsumerWidget {
                         color: isWishlisted ? Colors.red : null,
                         size: 18,
                       ),
-                      onPressed: () => ref.read(wishlistProvider.notifier).toggle(
+                      onPressed: () => ref
+                          .read(wishlistProvider.notifier)
+                          .toggle(
                             productId: product.id,
                             title: product.title,
                             thumbnail: product.thumbnail,
@@ -89,7 +93,9 @@ class ProductCard extends ConsumerWidget {
                     product.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: AppSpacing.xxs),
                   RatingStars(rating: product.rating),

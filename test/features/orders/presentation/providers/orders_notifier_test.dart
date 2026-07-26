@@ -16,17 +16,17 @@ void main() {
   late ProviderContainer container;
 
   Order order(String id, OrderStatus status) => Order(
-        id: id,
-        items: const [],
-        subtotal: 10,
-        discount: 0,
-        shippingCost: 5,
-        total: 15,
-        shippingAddressText: '123 Main St',
-        shippingMethodLabel: 'Standard shipping',
-        status: status,
-        createdAt: DateTime(2026, 1, 1),
-      );
+    id: id,
+    items: const [],
+    subtotal: 10,
+    discount: 0,
+    shippingCost: 5,
+    total: 15,
+    shippingAddressText: '123 Main St',
+    shippingMethodLabel: 'Standard shipping',
+    status: status,
+    createdAt: DateTime(2026, 1, 1),
+  );
 
   setUpAll(() {
     registerFallbackValue(order('fallback', OrderStatus.processing));
@@ -34,15 +34,21 @@ void main() {
 
   setUp(() {
     repository = _MockOrderRepository();
-    container = ProviderContainer(overrides: [orderRepositoryProvider.overrideWithValue(repository)]);
+    container = ProviderContainer(
+      overrides: [orderRepositoryProvider.overrideWithValue(repository)],
+    );
     addTearDown(container.dispose);
   });
 
   test('cancelOrder replaces only the matching order with its cancelled copy', () async {
-    final orders = [order('order-1', OrderStatus.processing), order('order-2', OrderStatus.processing)];
+    final orders = [
+      order('order-1', OrderStatus.processing),
+      order('order-2', OrderStatus.processing),
+    ];
     when(() => repository.getOrders()).thenAnswer((_) async => Right(orders));
-    when(() => repository.cancelOrder('order-1'))
-        .thenAnswer((_) async => Right(order('order-1', OrderStatus.cancelled)));
+    when(
+      () => repository.cancelOrder('order-1'),
+    ).thenAnswer((_) async => Right(order('order-1', OrderStatus.cancelled)));
 
     container.listen(ordersProvider, (previous, next) {});
     await container.read(ordersProvider.future);
@@ -59,7 +65,8 @@ void main() {
     final orders = [order('order-1', OrderStatus.shipped)];
     when(() => repository.getOrders()).thenAnswer((_) async => Right(orders));
     when(() => repository.cancelOrder('order-1')).thenAnswer(
-      (_) async => const Left(Failure.validation(message: 'Only processing orders can be cancelled')),
+      (_) async =>
+          const Left(Failure.validation(message: 'Only processing orders can be cancelled')),
     );
 
     container.listen(ordersProvider, (previous, next) {});

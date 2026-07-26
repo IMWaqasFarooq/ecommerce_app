@@ -27,7 +27,10 @@ class CheckoutNotifier extends _$CheckoutNotifier {
     final cartTotal = ref.read(cartProvider).value?.total ?? 0;
     await ref.read(analyticsServiceProvider).logBeginCheckout(value: cartTotal);
 
-    return CheckoutState(savedAddresses: addresses, selectedAddress: addresses.isEmpty ? null : addresses.first);
+    return CheckoutState(
+      savedAddresses: addresses,
+      selectedAddress: addresses.isEmpty ? null : addresses.first,
+    );
   }
 
   void selectAddress(Address address) {
@@ -93,7 +96,15 @@ class CheckoutNotifier extends _$CheckoutNotifier {
     final order = Order(
       id: const Uuid().v4(),
       items: cart.items
-          .map((i) => OrderItem(productId: i.productId, title: i.title, thumbnail: i.thumbnail, price: i.price, quantity: i.quantity))
+          .map(
+            (i) => OrderItem(
+              productId: i.productId,
+              title: i.title,
+              thumbnail: i.thumbnail,
+              price: i.price,
+              quantity: i.quantity,
+            ),
+          )
           .toList(),
       subtotal: cart.subtotal,
       discount: cart.discount,
@@ -107,10 +118,13 @@ class CheckoutNotifier extends _$CheckoutNotifier {
 
     final createResult = await ref.read(createOrderUseCaseProvider)(order);
     await createResult.fold(
-      (failure) async => state = AsyncData(current.copyWith(isPlacingOrder: false, failure: failure)),
+      (failure) async =>
+          state = AsyncData(current.copyWith(isPlacingOrder: false, failure: failure)),
       (createdOrder) async {
         await ref.read(cartProvider.notifier).clearCart();
-        await ref.read(analyticsServiceProvider).logPurchase(orderId: createdOrder.id, value: createdOrder.total);
+        await ref
+            .read(analyticsServiceProvider)
+            .logPurchase(orderId: createdOrder.id, value: createdOrder.total);
         state = AsyncData(current.copyWith(isPlacingOrder: false, completedOrder: createdOrder));
       },
     );

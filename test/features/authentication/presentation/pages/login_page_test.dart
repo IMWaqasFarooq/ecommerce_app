@@ -33,13 +33,13 @@ void main() {
   });
 
   Widget wrap() => ProviderScope(
-        overrides: [
-          signInWithEmailPasswordUseCaseProvider.overrideWithValue(signInUseCase),
-          sendPasswordResetEmailUseCaseProvider.overrideWithValue(resetUseCase),
-          analyticsServiceProvider.overrideWithValue(FakeAnalyticsService()),
-        ],
-        child: const MaterialApp(home: LoginPage()),
-      );
+    overrides: [
+      signInWithEmailPasswordUseCaseProvider.overrideWithValue(signInUseCase),
+      sendPasswordResetEmailUseCaseProvider.overrideWithValue(resetUseCase),
+      analyticsServiceProvider.overrideWithValue(FakeAnalyticsService()),
+    ],
+    child: const MaterialApp(home: LoginPage()),
+  );
 
   testWidgets('renders the welcome copy and both credential fields', (tester) async {
     await tester.pumpWidget(wrap());
@@ -50,7 +50,9 @@ void main() {
     expect(find.text('Sign in'), findsOneWidget);
   });
 
-  testWidgets('shows validation errors instead of submitting when fields are empty', (tester) async {
+  testWidgets('shows validation errors instead of submitting when fields are empty', (
+    tester,
+  ) async {
     await tester.pumpWidget(wrap());
 
     await tester.tap(find.text('Sign in'));
@@ -71,7 +73,9 @@ void main() {
     await tester.tap(find.text('Sign in'));
     await tester.pumpAndSettle();
 
-    verify(() => signInUseCase(const SignInParams(email: 'demo@velora.dev', password: 'password123'))).called(1);
+    verify(
+      () => signInUseCase(const SignInParams(email: 'demo@velora.dev', password: 'password123')),
+    ).called(1);
   });
 
   testWidgets('shows a spinner instead of the label while authenticating', (tester) async {
@@ -87,7 +91,9 @@ void main() {
     expect(find.text('Sign in'), findsNothing);
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-    completer.complete(const Right(AppUser(id: '1', email: 'demo@velora.dev', displayName: 'Demo')));
+    completer.complete(
+      const Right(AppUser(id: '1', email: 'demo@velora.dev', displayName: 'Demo')),
+    );
     await tester.pumpAndSettle();
   });
 

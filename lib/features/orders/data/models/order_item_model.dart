@@ -19,11 +19,21 @@ abstract class OrderItemModel with _$OrderItemModel {
 }
 
 extension OrderItemModelMapper on OrderItemModel {
-  OrderItem toEntity() =>
-      OrderItem(productId: productId, title: title, thumbnail: thumbnail, price: price, quantity: quantity);
+  OrderItem toEntity() => OrderItem(
+    productId: productId,
+    title: title,
+    thumbnail: thumbnail,
+    price: price,
+    quantity: quantity,
+  );
 }
 
 extension OrderItemEntityMapper on OrderItem {
-  OrderItemModel toModel() =>
-      OrderItemModel(productId: productId, title: title, thumbnail: thumbnail, price: price, quantity: quantity);
+  OrderItemModel toModel() => OrderItemModel(
+    productId: productId,
+    title: title,
+    thumbnail: thumbnail,
+    price: price,
+    quantity: quantity,
+  );
 }

@@ -69,7 +69,12 @@ void main() {
 
       final result = await repository.getProductDetail(1);
 
-      expect(result, const Left<Failure, dynamic>(Failure.network(message: 'No internet connection and no cached data')));
+      expect(
+        result,
+        const Left<Failure, dynamic>(
+          Failure.network(message: 'No internet connection and no cached data'),
+        ),
+      );
     });
   });
 

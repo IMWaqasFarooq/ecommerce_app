@@ -49,7 +49,13 @@ void main() {
     phone: '555-0100',
   );
 
-  const cartItem = CartItem(productId: 1, title: 'Mascara', thumbnail: 't', price: 9.99, quantity: 2);
+  const cartItem = CartItem(
+    productId: 1,
+    title: 'Mascara',
+    thumbnail: 't',
+    price: 9.99,
+    quantity: 2,
+  );
   const cart = Cart(items: [cartItem]);
 
   setUpAll(() {
@@ -76,7 +82,9 @@ void main() {
     paymentGateway = _MockPaymentGateway();
     orderRepository = _MockOrderRepository();
 
-    when(() => addressRepository.getSavedAddresses()).thenAnswer((_) async => const Right([address]));
+    when(
+      () => addressRepository.getSavedAddresses(),
+    ).thenAnswer((_) async => const Right([address]));
     when(() => cartRepository.getCart()).thenAnswer((_) async => const Right(cart));
     when(() => cartRepository.clearCart()).thenAnswer((_) async => const Right(Cart()));
 
@@ -116,8 +124,12 @@ void main() {
   });
 
   test('placeOrder charges the card, creates the order, and empties the cart on success', () async {
-    when(() => paymentGateway.pay(amountInSmallestUnit: any(named: 'amountInSmallestUnit'), currency: 'usd'))
-        .thenAnswer((_) async => const Right(null));
+    when(
+      () => paymentGateway.pay(
+        amountInSmallestUnit: any(named: 'amountInSmallestUnit'),
+        currency: 'usd',
+      ),
+    ).thenAnswer((_) async => const Right(null));
     when(() => orderRepository.createOrder(any())).thenAnswer((invocation) async {
       return Right(invocation.positionalArguments.first as Order);
     });
@@ -139,8 +151,12 @@ void main() {
   });
 
   test('placeOrder surfaces a decline without creating an order or clearing the cart', () async {
-    when(() => paymentGateway.pay(amountInSmallestUnit: any(named: 'amountInSmallestUnit'), currency: 'usd'))
-        .thenAnswer((_) async => const Left(Failure.payment(message: 'Your card was declined')));
+    when(
+      () => paymentGateway.pay(
+        amountInSmallestUnit: any(named: 'amountInSmallestUnit'),
+        currency: 'usd',
+      ),
+    ).thenAnswer((_) async => const Left(Failure.payment(message: 'Your card was declined')));
 
     container.listen(checkoutProvider, (previous, next) {});
     await container.read(checkoutProvider.future);

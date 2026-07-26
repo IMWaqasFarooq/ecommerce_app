@@ -19,20 +19,20 @@ class _MockSearchProductsUseCase extends Mock implements SearchProductsUseCase {
 class _MockSearchHistoryRepository extends Mock implements SearchHistoryRepository {}
 
 Product _product(int id, String title) => Product(
-      id: id,
-      title: title,
-      description: 'Description',
-      category: 'beauty',
-      price: 10,
-      discountPercentage: 0,
-      rating: 4.5,
-      stock: 5,
-      brand: 'Brand',
-      thumbnail: 'https://example.com/$id.png',
-      images: const [],
-      availabilityStatus: 'In Stock',
-      reviews: const <ProductReview>[],
-    );
+  id: id,
+  title: title,
+  description: 'Description',
+  category: 'beauty',
+  price: 10,
+  discountPercentage: 0,
+  rating: 4.5,
+  stock: 5,
+  brand: 'Brand',
+  thumbnail: 'https://example.com/$id.png',
+  images: const [],
+  availabilityStatus: 'In Stock',
+  reviews: const <ProductReview>[],
+);
 
 void main() {
   late _MockSearchProductsUseCase searchProducts;

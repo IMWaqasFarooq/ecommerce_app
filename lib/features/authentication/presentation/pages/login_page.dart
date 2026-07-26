@@ -32,24 +32,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
-    ref.read(authControllerProvider.notifier).signInWithEmailPassword(
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
+    ref
+        .read(authControllerProvider.notifier)
+        .signInWithEmailPassword(email: _emailController.text, password: _passwordController.text);
   }
 
   void _forgotPassword() {
     final email = _emailController.text.trim();
     if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Enter your email above first')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Enter your email above first')));
       return;
     }
     ref.read(authControllerProvider.notifier).sendPasswordResetEmail(email);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Password reset email sent to $email')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Password reset email sent to $email')));
   }
 
   @override
@@ -89,9 +88,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     const SizedBox(height: AppSpacing.xs),
                     Text(
                       'Sign in to continue to Velora',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: scheme.onSurfaceVariant,
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: AppSpacing.xl),
@@ -118,7 +117,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       },
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                          _obscurePassword
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
                         ),
                         onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                       ),
@@ -179,9 +180,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       children: [
                         const Text("Don't have an account?"),
                         TextButton(
-                          onPressed: isLoading
-                              ? null
-                              : () => context.push(RoutePaths.signup),
+                          onPressed: isLoading ? null : () => context.push(RoutePaths.signup),
                           child: const Text('Sign up'),
                         ),
                       ],

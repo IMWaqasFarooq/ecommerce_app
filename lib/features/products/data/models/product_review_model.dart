@@ -20,9 +20,9 @@ abstract class ProductReviewModel with _$ProductReviewModel {
 
 extension ProductReviewModelMapper on ProductReviewModel {
   ProductReview toEntity() => ProductReview(
-        rating: rating,
-        comment: comment,
-        date: DateTime.tryParse(date) ?? DateTime.now(),
-        reviewerName: reviewerName,
-      );
+    rating: rating,
+    comment: comment,
+    date: DateTime.tryParse(date) ?? DateTime.now(),
+    reviewerName: reviewerName,
+  );
 }

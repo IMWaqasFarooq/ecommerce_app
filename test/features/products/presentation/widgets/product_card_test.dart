@@ -88,7 +88,11 @@ void main() {
 
   testWidgets('shows a filled heart when the product is already wishlisted', (tester) async {
     await tester.pumpWidget(
-      wrap(wishlist: const [WishlistItem(productId: 1, title: 'Essence Mascara', thumbnail: 't', price: 10)]),
+      wrap(
+        wishlist: const [
+          WishlistItem(productId: 1, title: 'Essence Mascara', thumbnail: 't', price: 10),
+        ],
+      ),
     );
     await tester.pump();
 
@@ -98,7 +102,9 @@ void main() {
 
   testWidgets('tapping the heart toggles the wishlist for this product', (tester) async {
     when(() => toggleWishlist(any())).thenAnswer(
-      (_) async => const Right([WishlistItem(productId: 1, title: 'Essence Mascara', thumbnail: 't', price: 10)]),
+      (_) async => const Right([
+        WishlistItem(productId: 1, title: 'Essence Mascara', thumbnail: 't', price: 10),
+      ]),
     );
 
     await tester.pumpWidget(wrap());

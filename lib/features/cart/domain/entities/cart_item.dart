@@ -18,12 +18,12 @@ class CartItem extends Equatable {
   double get lineTotal => price * quantity;
 
   CartItem copyWith({int? quantity}) => CartItem(
-        productId: productId,
-        title: title,
-        thumbnail: thumbnail,
-        price: price,
-        quantity: quantity ?? this.quantity,
-      );
+    productId: productId,
+    title: title,
+    thumbnail: thumbnail,
+    price: price,
+    quantity: quantity ?? this.quantity,
+  );
 
   @override
   List<Object?> get props => [productId, title, thumbnail, price, quantity];

@@ -21,7 +21,15 @@ final orderRepositoryProvider = Provider<OrderRepository>((ref) {
   );
 });
 
-final createOrderUseCaseProvider = Provider((ref) => CreateOrderUseCase(ref.watch(orderRepositoryProvider)));
-final getOrderByIdUseCaseProvider = Provider((ref) => GetOrderByIdUseCase(ref.watch(orderRepositoryProvider)));
-final getOrdersUseCaseProvider = Provider((ref) => GetOrdersUseCase(ref.watch(orderRepositoryProvider)));
-final cancelOrderUseCaseProvider = Provider((ref) => CancelOrderUseCase(ref.watch(orderRepositoryProvider)));
+final createOrderUseCaseProvider = Provider(
+  (ref) => CreateOrderUseCase(ref.watch(orderRepositoryProvider)),
+);
+final getOrderByIdUseCaseProvider = Provider(
+  (ref) => GetOrderByIdUseCase(ref.watch(orderRepositoryProvider)),
+);
+final getOrdersUseCaseProvider = Provider(
+  (ref) => GetOrdersUseCase(ref.watch(orderRepositoryProvider)),
+);
+final cancelOrderUseCaseProvider = Provider(
+  (ref) => CancelOrderUseCase(ref.watch(orderRepositoryProvider)),
+);

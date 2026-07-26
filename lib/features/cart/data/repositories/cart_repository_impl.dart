@@ -20,9 +20,9 @@ class CartRepositoryImpl implements CartRepository {
   String get _ownerKey => firebaseAuth.currentUser?.uid ?? _guestOwnerKey;
 
   Cart _readCart(String ownerKey) => Cart(
-        items: localDataSource.getItems(ownerKey).map((m) => m.toEntity()).toList(),
-        coupon: localDataSource.getCoupon(ownerKey)?.toEntity(),
-      );
+    items: localDataSource.getItems(ownerKey).map((m) => m.toEntity()).toList(),
+    coupon: localDataSource.getCoupon(ownerKey)?.toEntity(),
+  );
 
   @override
   Future<Either<Failure, Cart>> getCart() async => Right(_readCart(_ownerKey));
@@ -42,11 +42,18 @@ class CartRepositoryImpl implements CartRepository {
     final updated = [...items];
     if (existingIndex == -1) {
       updated.add(
-        CartItemModel(productId: productId, title: title, thumbnail: thumbnail, price: price, quantity: quantity),
+        CartItemModel(
+          productId: productId,
+          title: title,
+          thumbnail: thumbnail,
+          price: price,
+          quantity: quantity,
+        ),
       );
     } else {
-      updated[existingIndex] =
-          updated[existingIndex].copyWith(quantity: updated[existingIndex].quantity + quantity);
+      updated[existingIndex] = updated[existingIndex].copyWith(
+        quantity: updated[existingIndex].quantity + quantity,
+      );
     }
 
     await localDataSource.saveItems(ownerKey, updated);
@@ -59,12 +66,16 @@ class CartRepositoryImpl implements CartRepository {
     final items = localDataSource.getItems(ownerKey);
 
     if (quantity <= 0) {
-      await localDataSource.saveItems(ownerKey, items.where((i) => i.productId != productId).toList());
+      await localDataSource.saveItems(
+        ownerKey,
+        items.where((i) => i.productId != productId).toList(),
+      );
       return Right(_readCart(ownerKey));
     }
 
     final updated = [
-      for (final item in items) item.productId == productId ? item.copyWith(quantity: quantity) : item,
+      for (final item in items)
+        item.productId == productId ? item.copyWith(quantity: quantity) : item,
     ];
     await localDataSource.saveItems(ownerKey, updated);
     return Right(_readCart(ownerKey));
@@ -74,7 +85,10 @@ class CartRepositoryImpl implements CartRepository {
   Future<Either<Failure, Cart>> removeItem(int productId) async {
     final ownerKey = _ownerKey;
     final items = localDataSource.getItems(ownerKey);
-    await localDataSource.saveItems(ownerKey, items.where((i) => i.productId != productId).toList());
+    await localDataSource.saveItems(
+      ownerKey,
+      items.where((i) => i.productId != productId).toList(),
+    );
     return Right(_readCart(ownerKey));
   }
 
@@ -87,7 +101,10 @@ class CartRepositoryImpl implements CartRepository {
     }
 
     final ownerKey = _ownerKey;
-    await localDataSource.saveCoupon(ownerKey, CouponModel(code: normalized, discountPercentage: discount));
+    await localDataSource.saveCoupon(
+      ownerKey,
+      CouponModel(code: normalized, discountPercentage: discount),
+    );
     return Right(_readCart(ownerKey));
   }
 
@@ -121,7 +138,9 @@ class CartRepositoryImpl implements CartRepository {
       if (index == -1) {
         merged.add(guestItem);
       } else {
-        merged[index] = merged[index].copyWith(quantity: merged[index].quantity + guestItem.quantity);
+        merged[index] = merged[index].copyWith(
+          quantity: merged[index].quantity + guestItem.quantity,
+        );
       }
     }
 

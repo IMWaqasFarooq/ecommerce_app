@@ -26,7 +26,10 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
 
   @override
   Future<ProductModel> getProductDetail(int id) async {
-    final response = await _dio.get('/products/$id', options: Options(extra: {'requiresAuth': false}));
+    final response = await _dio.get(
+      '/products/$id',
+      options: Options(extra: {'requiresAuth': false}),
+    );
     return ProductModel.fromJson(response.data as Map<String, dynamic>);
   }
 

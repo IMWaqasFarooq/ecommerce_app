@@ -125,7 +125,9 @@ class _ShippingStep extends ConsumerWidget {
                     RadioListTile<ShippingMethod>(
                       value: method,
                       title: Text(method.label),
-                      subtitle: Text('${method.etaDays} business day${method.etaDays > 1 ? 's' : ''}'),
+                      subtitle: Text(
+                        '${method.etaDays} business day${method.etaDays > 1 ? 's' : ''}',
+                      ),
                       secondary: Text('\$${method.cost.toStringAsFixed(2)}'),
                     ),
                 ],
@@ -169,11 +171,18 @@ class _PaymentStep extends ConsumerWidget {
           FilledButton(
             onPressed: state.isPlacingOrder ? null : notifier.placeOrder,
             child: state.isPlacingOrder
-                ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2.5))
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2.5),
+                  )
                 : const Text('Place order'),
           ),
           const SizedBox(height: AppSpacing.sm),
-          TextButton(onPressed: state.isPlacingOrder ? null : notifier.goBack, child: const Text('Back')),
+          TextButton(
+            onPressed: state.isPlacingOrder ? null : notifier.goBack,
+            child: const Text('Back'),
+          ),
         ],
       ),
     );

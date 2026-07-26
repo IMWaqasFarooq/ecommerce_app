@@ -69,7 +69,8 @@ class CartPage extends ConsumerWidget {
                         const SizedBox(height: AppSpacing.md),
                       ],
                       _SummaryRow(label: 'Subtotal', value: cart.subtotal),
-                      if (cart.coupon != null) _SummaryRow(label: 'Discount', value: -cart.discount),
+                      if (cart.coupon != null)
+                        _SummaryRow(label: 'Discount', value: -cart.discount),
                       _SummaryRow(label: 'Total', value: cart.total, emphasize: true),
                       const SizedBox(height: AppSpacing.md),
                       FilledButton(

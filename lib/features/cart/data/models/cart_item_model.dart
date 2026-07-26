@@ -19,11 +19,21 @@ abstract class CartItemModel with _$CartItemModel {
 }
 
 extension CartItemModelMapper on CartItemModel {
-  CartItem toEntity() =>
-      CartItem(productId: productId, title: title, thumbnail: thumbnail, price: price, quantity: quantity);
+  CartItem toEntity() => CartItem(
+    productId: productId,
+    title: title,
+    thumbnail: thumbnail,
+    price: price,
+    quantity: quantity,
+  );
 }
 
 extension CartItemEntityMapper on CartItem {
-  CartItemModel toModel() =>
-      CartItemModel(productId: productId, title: title, thumbnail: thumbnail, price: price, quantity: quantity);
+  CartItemModel toModel() => CartItemModel(
+    productId: productId,
+    title: title,
+    thumbnail: thumbnail,
+    price: price,
+    quantity: quantity,
+  );
 }

@@ -16,7 +16,9 @@ class WishlistLocalDataSourceImpl implements WishlistLocalDataSource {
   List<WishlistItemModel> getItems(String ownerKey) {
     final raw = _box.get(ownerKey) as List<dynamic>?;
     if (raw == null) return const [];
-    return raw.map((json) => WishlistItemModel.fromJson(Map<String, dynamic>.from(json as Map))).toList();
+    return raw
+        .map((json) => WishlistItemModel.fromJson(Map<String, dynamic>.from(json as Map)))
+        .toList();
   }
 
   @override

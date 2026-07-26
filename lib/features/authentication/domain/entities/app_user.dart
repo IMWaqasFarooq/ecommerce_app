@@ -13,12 +13,12 @@ class AppUser extends Equatable {
   });
 
   factory AppUser.fromFirebaseUser(fb.User user) => AppUser(
-        id: user.uid,
-        email: user.email ?? '',
-        displayName: user.displayName ?? (user.email?.split('@').first ?? 'User'),
-        photoUrl: user.photoURL,
-        emailVerified: user.emailVerified,
-      );
+    id: user.uid,
+    email: user.email ?? '',
+    displayName: user.displayName ?? (user.email?.split('@').first ?? 'User'),
+    photoUrl: user.photoURL,
+    emailVerified: user.emailVerified,
+  );
 
   final String id;
   final String email;

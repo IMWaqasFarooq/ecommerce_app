@@ -28,11 +28,19 @@ class CartNotifier extends _$CartNotifier {
   }) async {
     final failure = await _mutate(
       ref.read(addToCartUseCaseProvider)(
-        AddToCartParams(productId: productId, title: title, thumbnail: thumbnail, price: price, quantity: quantity),
+        AddToCartParams(
+          productId: productId,
+          title: title,
+          thumbnail: thumbnail,
+          price: price,
+          quantity: quantity,
+        ),
       ),
     );
     if (failure == null) {
-      await ref.read(analyticsServiceProvider).logAddToCart(productId: productId, name: title, price: price);
+      await ref
+          .read(analyticsServiceProvider)
+          .logAddToCart(productId: productId, name: title, price: price);
     }
     return failure;
   }

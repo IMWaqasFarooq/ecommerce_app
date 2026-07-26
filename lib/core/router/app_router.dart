@@ -73,9 +73,8 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: RoutePaths.productDetail,
         name: RouteNames.productDetail,
-        builder: (context, state) => ProductDetailPage(
-          productId: int.parse(state.pathParameters['productId']!),
-        ),
+        builder: (context, state) =>
+            ProductDetailPage(productId: int.parse(state.pathParameters['productId']!)),
       ),
       GoRoute(
         path: RoutePaths.checkout,
@@ -85,7 +84,8 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: RoutePaths.orderConfirmation,
         name: RouteNames.orderConfirmation,
-        builder: (context, state) => OrderConfirmationPage(orderId: state.pathParameters['orderId']!),
+        builder: (context, state) =>
+            OrderConfirmationPage(orderId: state.pathParameters['orderId']!),
       ),
       GoRoute(
         path: RoutePaths.orders,

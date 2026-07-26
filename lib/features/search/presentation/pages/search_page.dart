@@ -35,10 +35,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
         title: TextField(
           controller: _controller,
           autofocus: true,
-          decoration: const InputDecoration(
-            hintText: 'Search products',
-            border: InputBorder.none,
-          ),
+          decoration: const InputDecoration(hintText: 'Search products', border: InputBorder.none),
           textInputAction: TextInputAction.search,
           onChanged: notifier.onQueryChanged,
           onSubmitted: notifier.submit,

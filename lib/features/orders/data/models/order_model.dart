@@ -27,30 +27,30 @@ abstract class OrderModel with _$OrderModel {
 
 extension OrderModelMapper on OrderModel {
   Order toEntity() => Order(
-        id: id,
-        items: items.map((i) => i.toEntity()).toList(),
-        subtotal: subtotal,
-        discount: discount,
-        shippingCost: shippingCost,
-        total: total,
-        shippingAddressText: shippingAddressText,
-        shippingMethodLabel: shippingMethodLabel,
-        status: status,
-        createdAt: createdAt,
-      );
+    id: id,
+    items: items.map((i) => i.toEntity()).toList(),
+    subtotal: subtotal,
+    discount: discount,
+    shippingCost: shippingCost,
+    total: total,
+    shippingAddressText: shippingAddressText,
+    shippingMethodLabel: shippingMethodLabel,
+    status: status,
+    createdAt: createdAt,
+  );
 }
 
 extension OrderEntityMapper on Order {
   OrderModel toModel() => OrderModel(
-        id: id,
-        items: items.map((i) => i.toModel()).toList(),
-        subtotal: subtotal,
-        discount: discount,
-        shippingCost: shippingCost,
-        total: total,
-        shippingAddressText: shippingAddressText,
-        shippingMethodLabel: shippingMethodLabel,
-        status: status,
-        createdAt: createdAt,
-      );
+    id: id,
+    items: items.map((i) => i.toModel()).toList(),
+    subtotal: subtotal,
+    discount: discount,
+    shippingCost: shippingCost,
+    total: total,
+    shippingAddressText: shippingAddressText,
+    shippingMethodLabel: shippingMethodLabel,
+    status: status,
+    createdAt: createdAt,
+  );
 }

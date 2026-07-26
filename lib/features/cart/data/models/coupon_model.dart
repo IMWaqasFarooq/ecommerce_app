@@ -7,7 +7,8 @@ part 'coupon_model.g.dart';
 
 @freezed
 abstract class CouponModel with _$CouponModel {
-  const factory CouponModel({required String code, required double discountPercentage}) = _CouponModel;
+  const factory CouponModel({required String code, required double discountPercentage}) =
+      _CouponModel;
 
   factory CouponModel.fromJson(Map<String, dynamic> json) => _$CouponModelFromJson(json);
 }

@@ -22,7 +22,10 @@ class ProfilePlaceholderPage extends ConsumerWidget {
           Center(
             child: Column(
               children: [
-                CircleAvatar(radius: 32, child: Text((user?.displayName ?? user?.email ?? '?')[0].toUpperCase())),
+                CircleAvatar(
+                  radius: 32,
+                  child: Text((user?.displayName ?? user?.email ?? '?')[0].toUpperCase()),
+                ),
                 const SizedBox(height: AppSpacing.sm),
                 Text(user?.displayName ?? user?.email ?? 'Unknown'),
               ],

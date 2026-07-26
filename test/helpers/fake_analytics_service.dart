@@ -11,10 +11,18 @@ class FakeAnalyticsService implements AnalyticsService {
   Future<void> logSearch(String query) async {}
 
   @override
-  Future<void> logViewProduct({required int productId, required String name, required double price}) async {}
+  Future<void> logViewProduct({
+    required int productId,
+    required String name,
+    required double price,
+  }) async {}
 
   @override
-  Future<void> logAddToCart({required int productId, required String name, required double price}) async {}
+  Future<void> logAddToCart({
+    required int productId,
+    required String name,
+    required double price,
+  }) async {}
 
   @override
   Future<void> logBeginCheckout({required double value}) async {}

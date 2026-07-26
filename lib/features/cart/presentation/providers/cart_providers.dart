@@ -25,11 +25,21 @@ final cartRepositoryProvider = Provider<CartRepository>((ref) {
 });
 
 final getCartUseCaseProvider = Provider((ref) => GetCartUseCase(ref.watch(cartRepositoryProvider)));
-final addToCartUseCaseProvider = Provider((ref) => AddToCartUseCase(ref.watch(cartRepositoryProvider)));
-final updateCartQuantityUseCaseProvider =
-    Provider((ref) => UpdateCartQuantityUseCase(ref.watch(cartRepositoryProvider)));
-final removeFromCartUseCaseProvider =
-    Provider((ref) => RemoveFromCartUseCase(ref.watch(cartRepositoryProvider)));
-final applyCouponUseCaseProvider = Provider((ref) => ApplyCouponUseCase(ref.watch(cartRepositoryProvider)));
-final removeCouponUseCaseProvider = Provider((ref) => RemoveCouponUseCase(ref.watch(cartRepositoryProvider)));
-final clearCartUseCaseProvider = Provider((ref) => ClearCartUseCase(ref.watch(cartRepositoryProvider)));
+final addToCartUseCaseProvider = Provider(
+  (ref) => AddToCartUseCase(ref.watch(cartRepositoryProvider)),
+);
+final updateCartQuantityUseCaseProvider = Provider(
+  (ref) => UpdateCartQuantityUseCase(ref.watch(cartRepositoryProvider)),
+);
+final removeFromCartUseCaseProvider = Provider(
+  (ref) => RemoveFromCartUseCase(ref.watch(cartRepositoryProvider)),
+);
+final applyCouponUseCaseProvider = Provider(
+  (ref) => ApplyCouponUseCase(ref.watch(cartRepositoryProvider)),
+);
+final removeCouponUseCaseProvider = Provider(
+  (ref) => RemoveCouponUseCase(ref.watch(cartRepositoryProvider)),
+);
+final clearCartUseCaseProvider = Provider(
+  (ref) => ClearCartUseCase(ref.watch(cartRepositoryProvider)),
+);

@@ -16,7 +16,11 @@ class FirebaseAnalyticsService implements AnalyticsService {
   Future<void> logSearch(String query) => _analytics.logSearch(searchTerm: query);
 
   @override
-  Future<void> logViewProduct({required int productId, required String name, required double price}) {
+  Future<void> logViewProduct({
+    required int productId,
+    required String name,
+    required double price,
+  }) {
     return _analytics.logViewItem(
       currency: 'usd',
       value: price,

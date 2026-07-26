@@ -11,7 +11,8 @@ class ToggleWishlistUseCase implements UseCase<List<WishlistItem>, ToggleWishlis
   final WishlistRepository _repository;
 
   @override
-  Future<Either<Failure, List<WishlistItem>>> call(ToggleWishlistParams params) => _repository.toggle(
+  Future<Either<Failure, List<WishlistItem>>> call(ToggleWishlistParams params) =>
+      _repository.toggle(
         productId: params.productId,
         title: params.title,
         thumbnail: params.thumbnail,

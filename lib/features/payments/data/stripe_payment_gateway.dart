@@ -10,7 +10,10 @@ class StripePaymentGateway implements PaymentGateway {
   final PaymentsRemoteDataSource _remoteDataSource;
 
   @override
-  Future<Either<Failure, void>> pay({required int amountInSmallestUnit, required String currency}) async {
+  Future<Either<Failure, void>> pay({
+    required int amountInSmallestUnit,
+    required String currency,
+  }) async {
     try {
       final clientSecret = await _remoteDataSource.createPaymentIntentClientSecret(
         amountInSmallestUnit: amountInSmallestUnit,

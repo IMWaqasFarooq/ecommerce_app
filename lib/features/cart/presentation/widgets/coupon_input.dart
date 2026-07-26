@@ -4,7 +4,12 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../domain/entities/coupon.dart';
 
 class CouponInput extends StatefulWidget {
-  const CouponInput({required this.appliedCoupon, required this.onApply, required this.onRemove, super.key});
+  const CouponInput({
+    required this.appliedCoupon,
+    required this.onApply,
+    required this.onRemove,
+    super.key,
+  });
 
   final Coupon? appliedCoupon;
   final ValueChanged<String> onApply;

@@ -26,7 +26,11 @@ class OrderConfirmationPage extends ConsumerWidget {
               data: (order) => Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.check_circle_rounded, size: 72, color: Theme.of(context).colorScheme.primary),
+                  Icon(
+                    Icons.check_circle_rounded,
+                    size: 72,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                   const SizedBox(height: AppSpacing.md),
                   Text('Order placed!', style: Theme.of(context).textTheme.headlineSmall),
                   const SizedBox(height: AppSpacing.xs),

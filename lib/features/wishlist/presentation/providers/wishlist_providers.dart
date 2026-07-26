@@ -19,6 +19,9 @@ final wishlistRepositoryProvider = Provider<WishlistRepository>((ref) {
   );
 });
 
-final getWishlistUseCaseProvider = Provider((ref) => GetWishlistUseCase(ref.watch(wishlistRepositoryProvider)));
-final toggleWishlistUseCaseProvider =
-    Provider((ref) => ToggleWishlistUseCase(ref.watch(wishlistRepositoryProvider)));
+final getWishlistUseCaseProvider = Provider(
+  (ref) => GetWishlistUseCase(ref.watch(wishlistRepositoryProvider)),
+);
+final toggleWishlistUseCaseProvider = Provider(
+  (ref) => ToggleWishlistUseCase(ref.watch(wishlistRepositoryProvider)),
+);

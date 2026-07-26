@@ -31,29 +31,29 @@ class Order extends Equatable {
   bool get isCancellable => status == OrderStatus.processing;
 
   Order copyWith({OrderStatus? status}) => Order(
-        id: id,
-        items: items,
-        subtotal: subtotal,
-        discount: discount,
-        shippingCost: shippingCost,
-        total: total,
-        shippingAddressText: shippingAddressText,
-        shippingMethodLabel: shippingMethodLabel,
-        status: status ?? this.status,
-        createdAt: createdAt,
-      );
+    id: id,
+    items: items,
+    subtotal: subtotal,
+    discount: discount,
+    shippingCost: shippingCost,
+    total: total,
+    shippingAddressText: shippingAddressText,
+    shippingMethodLabel: shippingMethodLabel,
+    status: status ?? this.status,
+    createdAt: createdAt,
+  );
 
   @override
   List<Object?> get props => [
-        id,
-        items,
-        subtotal,
-        discount,
-        shippingCost,
-        total,
-        shippingAddressText,
-        shippingMethodLabel,
-        status,
-        createdAt,
-      ];
+    id,
+    items,
+    subtotal,
+    discount,
+    shippingCost,
+    total,
+    shippingAddressText,
+    shippingMethodLabel,
+    status,
+    createdAt,
+  ];
 }

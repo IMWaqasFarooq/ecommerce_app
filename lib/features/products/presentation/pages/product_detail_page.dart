@@ -69,7 +69,9 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                     isWishlisted ? Icons.favorite_rounded : Icons.favorite_border_rounded,
                     color: isWishlisted ? Colors.red : null,
                   ),
-                  onPressed: () => ref.read(wishlistProvider.notifier).toggle(
+                  onPressed: () => ref
+                      .read(wishlistProvider.notifier)
+                      .toggle(
                         productId: product.id,
                         title: product.title,
                         thumbnail: product.thumbnail,
@@ -89,10 +91,8 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                     controller: _pageController,
                     onPageChanged: (index) => setState(() => _imageIndex = index),
                     itemCount: product.images.length,
-                    itemBuilder: (context, index) => CachedNetworkImage(
-                      imageUrl: product.images[index],
-                      fit: BoxFit.cover,
-                    ),
+                    itemBuilder: (context, index) =>
+                        CachedNetworkImage(imageUrl: product.images[index], fit: BoxFit.cover),
                   ),
                 ),
                 if (product.images.length > 1)
@@ -149,7 +149,10 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
               Text(product.description, style: Theme.of(context).textTheme.bodyMedium),
               const SizedBox(height: AppSpacing.lg),
               if (product.reviews.isNotEmpty) ...[
-                Text('Reviews (${product.reviews.length})', style: AppTextStyles.sectionTitle(context)),
+                Text(
+                  'Reviews (${product.reviews.length})',
+                  style: AppTextStyles.sectionTitle(context),
+                ),
                 const SizedBox(height: AppSpacing.xs),
                 for (final review in product.reviews) _ReviewTile(review: review),
                 const SizedBox(height: AppSpacing.lg),
@@ -167,7 +170,8 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               itemCount: related.length,
-                              separatorBuilder: (context, index) => const SizedBox(width: AppSpacing.sm),
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(width: AppSpacing.sm),
                               itemBuilder: (context, index) => SizedBox(
                                 width: 150,
                                 child: ProductCard(
@@ -204,7 +208,9 @@ class _AddToCartBar extends ConsumerWidget {
           onPressed: !product.inStock
               ? null
               : () async {
-                  await ref.read(cartProvider.notifier).addItem(
+                  await ref
+                      .read(cartProvider.notifier)
+                      .addItem(
                         productId: product.id,
                         title: product.title,
                         thumbnail: product.thumbnail,
@@ -238,7 +244,12 @@ class _ReviewTile extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(review.reviewerName, style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600)),
+              Text(
+                review.reviewerName,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
+              ),
               const SizedBox(width: AppSpacing.sm),
               RatingStars(rating: review.rating.toDouble(), size: 14),
               const Spacer(),

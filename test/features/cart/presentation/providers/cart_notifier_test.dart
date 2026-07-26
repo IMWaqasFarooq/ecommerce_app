@@ -42,9 +42,9 @@ void main() {
 
   test('an invalid coupon returns a failure without discarding the loaded cart', () async {
     when(() => repository.getCart()).thenAnswer((_) async => const Right(Cart(items: [item])));
-    when(() => repository.applyCoupon('BAD')).thenAnswer(
-      (_) async => const Left(Failure.validation(message: 'Invalid coupon code')),
-    );
+    when(
+      () => repository.applyCoupon('BAD'),
+    ).thenAnswer((_) async => const Left(Failure.validation(message: 'Invalid coupon code')));
     container.listen(cartProvider, (previous, next) {});
 
     await container.read(cartProvider.future);
@@ -56,17 +56,21 @@ void main() {
 
   test('addItem updates the state with the repository result', () async {
     when(() => repository.getCart()).thenAnswer((_) async => const Right(Cart()));
-    when(() => repository.addItem(
-          productId: any(named: 'productId'),
-          title: any(named: 'title'),
-          thumbnail: any(named: 'thumbnail'),
-          price: any(named: 'price'),
-          quantity: any(named: 'quantity'),
-        )).thenAnswer((_) async => const Right(Cart(items: [item])));
+    when(
+      () => repository.addItem(
+        productId: any(named: 'productId'),
+        title: any(named: 'title'),
+        thumbnail: any(named: 'thumbnail'),
+        price: any(named: 'price'),
+        quantity: any(named: 'quantity'),
+      ),
+    ).thenAnswer((_) async => const Right(Cart(items: [item])));
     container.listen(cartProvider, (previous, next) {});
 
     await container.read(cartProvider.future);
-    await container.read(cartProvider.notifier).addItem(
+    await container
+        .read(cartProvider.notifier)
+        .addItem(
           productId: item.productId,
           title: item.title,
           thumbnail: item.thumbnail,

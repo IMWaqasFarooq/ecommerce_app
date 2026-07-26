@@ -29,18 +29,18 @@ abstract class ProductModel with _$ProductModel {
 
 extension ProductModelMapper on ProductModel {
   Product toEntity() => Product(
-        id: id,
-        title: title,
-        description: description,
-        category: category,
-        price: price,
-        discountPercentage: discountPercentage,
-        rating: rating,
-        stock: stock,
-        brand: brand ?? '',
-        thumbnail: thumbnail,
-        images: images.isEmpty ? [thumbnail] : images,
-        availabilityStatus: availabilityStatus,
-        reviews: reviews.map((r) => r.toEntity()).toList(),
-      );
+    id: id,
+    title: title,
+    description: description,
+    category: category,
+    price: price,
+    discountPercentage: discountPercentage,
+    rating: rating,
+    stock: stock,
+    brand: brand ?? '',
+    thumbnail: thumbnail,
+    images: images.isEmpty ? [thumbnail] : images,
+    availabilityStatus: availabilityStatus,
+    reviews: reviews.map((r) => r.toEntity()).toList(),
+  );
 }

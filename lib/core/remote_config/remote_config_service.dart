@@ -10,10 +10,7 @@ class RemoteConfigServiceImpl implements RemoteConfigService {
   RemoteConfigServiceImpl(this._remoteConfig);
   final FirebaseRemoteConfig _remoteConfig;
 
-  static const _defaults = <String, dynamic>{
-    'coupons_enabled': true,
-    'wishlist_enabled': true,
-  };
+  static const _defaults = <String, dynamic>{'coupons_enabled': true, 'wishlist_enabled': true};
 
   @override
   Future<void> initialize() async {

@@ -10,10 +10,14 @@ Future<Failure> mapExceptionToFailure(Object error) async {
     NetworkException(:final message) => Failure.network(message: message),
     UnauthorizedException(:final message) => Failure.unauthorized(message: message),
     ValidationException(:final message) => Failure.validation(message: message),
-    PaymentException(:final message, :final declineCode) =>
-      Failure.payment(message: message, declineCode: declineCode),
-    ServerException(:final message, :final statusCode) =>
-      Failure.server(message: message, statusCode: statusCode),
+    PaymentException(:final message, :final declineCode) => Failure.payment(
+      message: message,
+      declineCode: declineCode,
+    ),
+    ServerException(:final message, :final statusCode) => Failure.server(
+      message: message,
+      statusCode: statusCode,
+    ),
     CacheException(:final message) => Failure.cache(message: message),
     SocketException() => const Failure.network(),
     DioException() => _mapDioException(error),

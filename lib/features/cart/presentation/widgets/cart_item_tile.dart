@@ -43,7 +43,9 @@ class CartItemTile extends StatelessWidget {
                 const SizedBox(height: AppSpacing.xxs),
                 Text(
                   '\$${item.price.toStringAsFixed(2)}',
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 Row(
@@ -67,10 +69,7 @@ class CartItemTile extends StatelessWidget {
               ],
             ),
           ),
-          IconButton(
-            onPressed: onRemove,
-            icon: const Icon(Icons.delete_outline_rounded),
-          ),
+          IconButton(onPressed: onRemove, icon: const Icon(Icons.delete_outline_rounded)),
         ],
       ),
     );

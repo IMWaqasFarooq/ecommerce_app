@@ -23,26 +23,26 @@ abstract class AddressModel with _$AddressModel {
 
 extension AddressModelMapper on AddressModel {
   Address toEntity() => Address(
-        fullName: fullName,
-        line1: line1,
-        line2: line2,
-        city: city,
-        state: state,
-        postalCode: postalCode,
-        country: country,
-        phone: phone,
-      );
+    fullName: fullName,
+    line1: line1,
+    line2: line2,
+    city: city,
+    state: state,
+    postalCode: postalCode,
+    country: country,
+    phone: phone,
+  );
 }
 
 extension AddressEntityMapper on Address {
   AddressModel toModel() => AddressModel(
-        fullName: fullName,
-        line1: line1,
-        line2: line2,
-        city: city,
-        state: state,
-        postalCode: postalCode,
-        country: country,
-        phone: phone,
-      );
+    fullName: fullName,
+    line1: line1,
+    line2: line2,
+    city: city,
+    state: state,
+    postalCode: postalCode,
+    country: country,
+    phone: phone,
+  );
 }

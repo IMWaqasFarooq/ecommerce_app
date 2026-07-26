@@ -23,7 +23,10 @@ void main() {
     localDataSource = _MockLocalDataSource();
     firebaseAuth = _MockFirebaseAuth();
     when(() => firebaseAuth.currentUser).thenReturn(null);
-    repository = AddressRepositoryImpl(localDataSource: localDataSource, firebaseAuth: firebaseAuth);
+    repository = AddressRepositoryImpl(
+      localDataSource: localDataSource,
+      firebaseAuth: firebaseAuth,
+    );
   });
 
   const address = Address(
@@ -44,7 +47,8 @@ void main() {
 
     expect(result.isRight(), isTrue);
     final captured =
-        verify(() => localDataSource.saveAddresses('guest', captureAny())).captured.single as List<AddressModel>;
+        verify(() => localDataSource.saveAddresses('guest', captureAny())).captured.single
+            as List<AddressModel>;
     expect(captured, [address.toModel()]);
   });
 
@@ -56,7 +60,8 @@ void main() {
 
     expect(result.isRight(), isTrue);
     final captured =
-        verify(() => localDataSource.saveAddresses('guest', captureAny())).captured.single as List<AddressModel>;
+        verify(() => localDataSource.saveAddresses('guest', captureAny())).captured.single
+            as List<AddressModel>;
     expect(captured, isEmpty);
   });
 }

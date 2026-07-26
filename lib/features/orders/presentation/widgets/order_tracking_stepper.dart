@@ -30,7 +30,10 @@ class OrderTrackingStepper extends StatelessWidget {
         for (var i = 0; i < _trackingSteps.length; i++) ...[
           if (i > 0)
             Expanded(
-              child: Container(height: 2, color: i <= currentIndex ? scheme.primary : scheme.outlineVariant),
+              child: Container(
+                height: 2,
+                color: i <= currentIndex ? scheme.primary : scheme.outlineVariant,
+              ),
             ),
           Column(
             children: [

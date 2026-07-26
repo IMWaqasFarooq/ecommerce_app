@@ -14,9 +14,11 @@ abstract class WishlistItemModel with _$WishlistItemModel {
     required double price,
   }) = _WishlistItemModel;
 
-  factory WishlistItemModel.fromJson(Map<String, dynamic> json) => _$WishlistItemModelFromJson(json);
+  factory WishlistItemModel.fromJson(Map<String, dynamic> json) =>
+      _$WishlistItemModelFromJson(json);
 }
 
 extension WishlistItemModelMapper on WishlistItemModel {
-  WishlistItem toEntity() => WishlistItem(productId: productId, title: title, thumbnail: thumbnail, price: price);
+  WishlistItem toEntity() =>
+      WishlistItem(productId: productId, title: title, thumbnail: thumbnail, price: price);
 }

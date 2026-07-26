@@ -21,7 +21,8 @@ class WishlistRepositoryImpl implements WishlistRepository {
       localDataSource.getItems(ownerKey).map((m) => m.toEntity()).toList();
 
   @override
-  Future<Either<Failure, List<WishlistItem>>> getWishlist() async => Right(_readWishlist(_ownerKey));
+  Future<Either<Failure, List<WishlistItem>>> getWishlist() async =>
+      Right(_readWishlist(_ownerKey));
 
   @override
   Future<Either<Failure, List<WishlistItem>>> toggle({
@@ -36,7 +37,15 @@ class WishlistRepositoryImpl implements WishlistRepository {
 
     final updated = exists
         ? items.where((i) => i.productId != productId).toList()
-        : [...items, WishlistItemModel(productId: productId, title: title, thumbnail: thumbnail, price: price)];
+        : [
+            ...items,
+            WishlistItemModel(
+              productId: productId,
+              title: title,
+              thumbnail: thumbnail,
+              price: price,
+            ),
+          ];
 
     await localDataSource.saveItems(ownerKey, updated);
     return Right(_readWishlist(ownerKey));

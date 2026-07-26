@@ -79,8 +79,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       final hasName = appleCredential.givenName != null || appleCredential.familyName != null;
       if (hasName && (user.displayName == null || user.displayName!.isEmpty)) {
-        final fullName =
-            '${appleCredential.givenName ?? ''} ${appleCredential.familyName ?? ''}'.trim();
+        final fullName = '${appleCredential.givenName ?? ''} ${appleCredential.familyName ?? ''}'
+            .trim();
         if (fullName.isNotEmpty) await user.updateDisplayName(fullName);
       }
       await user.reload();

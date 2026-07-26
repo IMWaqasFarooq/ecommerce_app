@@ -19,6 +19,9 @@ final addressRepositoryProvider = Provider<AddressRepository>((ref) {
   );
 });
 
-final getSavedAddressesUseCaseProvider =
-    Provider((ref) => GetSavedAddressesUseCase(ref.watch(addressRepositoryProvider)));
-final saveAddressUseCaseProvider = Provider((ref) => SaveAddressUseCase(ref.watch(addressRepositoryProvider)));
+final getSavedAddressesUseCaseProvider = Provider(
+  (ref) => GetSavedAddressesUseCase(ref.watch(addressRepositoryProvider)),
+);
+final saveAddressUseCaseProvider = Provider(
+  (ref) => SaveAddressUseCase(ref.watch(addressRepositoryProvider)),
+);

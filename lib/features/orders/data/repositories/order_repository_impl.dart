@@ -25,7 +25,10 @@ class OrderRepositoryImpl implements OrderRepository {
 
   @override
   Future<Either<Failure, Order>> getOrderById(String id) async {
-    final matches = localDataSource.getOrders(_ownerKey).map((m) => m.toEntity()).where((o) => o.id == id);
+    final matches = localDataSource
+        .getOrders(_ownerKey)
+        .map((m) => m.toEntity())
+        .where((o) => o.id == id);
     if (matches.isEmpty) return const Left(Failure.unknown(message: 'Order not found'));
     return Right(matches.first);
   }

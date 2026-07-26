@@ -35,18 +35,32 @@ void main() {
   );
 
   test('fetches the requested page from the repository', () async {
-    when(() => repository.getProducts(page: any(named: 'page'), limit: any(named: 'limit')))
-        .thenAnswer((_) async => const Right((products: [product], total: 194)));
+    when(
+      () => repository.getProducts(
+        page: any(named: 'page'),
+        limit: any(named: 'limit'),
+      ),
+    ).thenAnswer((_) async => const Right((products: [product], total: 194)));
 
     final result = await useCase(const GetProductsParams(page: 2, limit: 20));
 
-    expect(result, const Right<Failure, ({List<Product> products, int total})>((products: [product], total: 194)));
+    expect(
+      result,
+      const Right<Failure, ({List<Product> products, int total})>((
+        products: [product],
+        total: 194,
+      )),
+    );
     verify(() => repository.getProducts(page: 2, limit: 20)).called(1);
   });
 
   test('propagates a failure from the repository', () async {
-    when(() => repository.getProducts(page: any(named: 'page'), limit: any(named: 'limit')))
-        .thenAnswer((_) async => const Left(Failure.network()));
+    when(
+      () => repository.getProducts(
+        page: any(named: 'page'),
+        limit: any(named: 'limit'),
+      ),
+    ).thenAnswer((_) async => const Left(Failure.network()));
 
     final result = await useCase(const GetProductsParams(page: 1, limit: 20));
 

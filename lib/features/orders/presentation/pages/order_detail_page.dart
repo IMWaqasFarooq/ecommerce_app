@@ -43,12 +43,18 @@ class _OrderDetailContent extends ConsumerWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Order #${order.id.substring(0, 8).toUpperCase()}', style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              'Order #${order.id.substring(0, 8).toUpperCase()}',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             OrderStatusBadge(status: order.status),
           ],
         ),
         const SizedBox(height: AppSpacing.xxs),
-        Text(DateFormat.yMMMd().add_jm().format(order.createdAt), style: Theme.of(context).textTheme.bodySmall),
+        Text(
+          DateFormat.yMMMd().add_jm().format(order.createdAt),
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
         const SizedBox(height: AppSpacing.lg),
         OrderTrackingStepper(status: order.status),
         const SizedBox(height: AppSpacing.lg),
@@ -61,7 +67,12 @@ class _OrderDetailContent extends ConsumerWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(AppSpacing.xs),
-                  child: CachedNetworkImage(imageUrl: item.thumbnail, width: 48, height: 48, fit: BoxFit.cover),
+                  child: CachedNetworkImage(
+                    imageUrl: item.thumbnail,
+                    width: 48,
+                    height: 48,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(child: Text('${item.title} × ${item.quantity}')),
