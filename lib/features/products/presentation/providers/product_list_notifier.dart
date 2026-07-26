@@ -8,7 +8,7 @@ part 'product_list_notifier.g.dart';
 
 const _perPage = 20;
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ProductListNotifier extends _$ProductListNotifier {
   @override
   ProductListState build() {
