@@ -1,8 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-/// Generic secure key-value store. Firebase Auth manages its own session
-/// token lifecycle internally, so this is for app-specific secrets only
-/// (e.g. a cached Stripe customer id), never a Firebase/auth token.
+// For app-specific secrets only (e.g. cached Stripe customer id) - not Firebase's own tokens.
 abstract class SecureStorage {
   Future<String?> read(String key);
   Future<void> write(String key, String value);

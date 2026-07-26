@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-/// Attaches a fresh Firebase ID token; Firebase handles refresh internally,
-/// so this never reads from static storage. Opt out via extra['requiresAuth'] = false.
+// Fetches a fresh Firebase ID token per request instead of reading static storage.
 class AuthInterceptor extends Interceptor {
   AuthInterceptor(this._firebaseAuth);
 

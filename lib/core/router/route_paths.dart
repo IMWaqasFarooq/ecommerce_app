@@ -1,6 +1,7 @@
 abstract final class RoutePaths {
   static const splash = '/splash';
   static const login = '/login';
+  static const signup = '/signup';
   static const home = '/';
   static const productDetail = '/product/:productId';
   static const search = '/search';
@@ -18,6 +19,7 @@ abstract final class RoutePaths {
 abstract final class RouteNames {
   static const splash = 'splash';
   static const login = 'login';
+  static const signup = 'signup';
   static const home = 'home';
   static const productDetail = 'productDetail';
   static const search = 'search';

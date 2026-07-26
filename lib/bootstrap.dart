@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -9,11 +10,14 @@ import 'core/config/env_config.dart';
 import 'core/config/flavor.dart';
 import 'core/providers/core_providers.dart';
 import 'core/storage/hive_boxes.dart';
+import 'firebase_options.dart';
 
 Future<void> bootstrap(Flavor flavor) async {
   await runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+
+      await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
       final env = EnvConfig(flavor);
       await env.load();

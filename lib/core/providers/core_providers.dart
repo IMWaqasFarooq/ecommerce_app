@@ -11,8 +11,7 @@ import '../network/interceptors/auth_interceptor.dart';
 import '../network/network_info.dart';
 import '../storage/secure_storage.dart';
 
-/// Overridden in bootstrap() with the flavor's loaded config; never read
-/// before that override is applied.
+// Overridden in bootstrap() with the flavor's loaded config.
 final envConfigProvider = Provider<EnvConfig>((ref) {
   throw UnimplementedError('envConfigProvider must be overridden in bootstrap()');
 });
