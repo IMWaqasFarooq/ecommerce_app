@@ -53,6 +53,11 @@ lib/firebase_options.dart
 ios/Runner/GoogleService-Info.plist
 android/app/google-services.json
 
+# Generated code
+**/*.g.dart
+**/*.freezed.dart
+**/*.mocks.dart
+
 # Cloud Functions
 functions/node_modules/
 functions/lib/
