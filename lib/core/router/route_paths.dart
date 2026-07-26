@@ -8,11 +8,13 @@ abstract final class RoutePaths {
   static const cart = '/cart';
   static const wishlist = '/wishlist';
   static const checkout = '/checkout';
+  static const orderConfirmation = '/checkout/confirmation/:orderId';
   static const orders = '/orders';
   static const orderDetail = '/orders/:orderId';
   static const profile = '/profile';
 
   static String productDetailPath(String productId) => '/product/$productId';
+  static String orderConfirmationPath(String orderId) => '/checkout/confirmation/$orderId';
   static String orderDetailPath(String orderId) => '/orders/$orderId';
 }
 
@@ -26,6 +28,7 @@ abstract final class RouteNames {
   static const cart = 'cart';
   static const wishlist = 'wishlist';
   static const checkout = 'checkout';
+  static const orderConfirmation = 'orderConfirmation';
   static const orders = 'orders';
   static const orderDetail = 'orderDetail';
   static const profile = 'profile';

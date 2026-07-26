@@ -7,6 +7,8 @@ import '../../features/authentication/presentation/pages/signup_page.dart';
 import '../../features/authentication/presentation/pages/splash_page.dart';
 import '../../features/authentication/presentation/providers/auth_state_provider.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
+import '../../features/checkout/presentation/pages/checkout_page.dart';
+import '../../features/checkout/presentation/pages/order_confirmation_page.dart';
 import '../../features/products/presentation/pages/product_detail_page.dart';
 import '../../features/products/presentation/pages/product_list_page.dart';
 import '../../features/profile/presentation/pages/profile_placeholder_page.dart';
@@ -72,6 +74,16 @@ GoRouter router(Ref ref) {
         builder: (context, state) => ProductDetailPage(
           productId: int.parse(state.pathParameters['productId']!),
         ),
+      ),
+      GoRoute(
+        path: RoutePaths.checkout,
+        name: RouteNames.checkout,
+        builder: (context, state) => const CheckoutPage(),
+      ),
+      GoRoute(
+        path: RoutePaths.orderConfirmation,
+        name: RouteNames.orderConfirmation,
+        builder: (context, state) => OrderConfirmationPage(orderId: state.pathParameters['orderId']!),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => MainShell(navigationShell: navigationShell),
