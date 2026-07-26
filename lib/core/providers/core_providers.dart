@@ -1,14 +1,19 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 
+import '../analytics/analytics_service.dart';
+import '../analytics/firebase_analytics_service.dart';
 import '../config/env_config.dart';
 import '../network/dio_client.dart';
 import '../network/interceptors/auth_interceptor.dart';
 import '../network/network_info.dart';
+import '../remote_config/remote_config_service.dart';
 import '../storage/secure_storage.dart';
 
 // Overridden in bootstrap() with the flavor's loaded config.
@@ -46,3 +51,11 @@ final hiveBoxesProvider = Provider<Map<String, Box<dynamic>>>((ref) {
 });
 
 Box<dynamic> hiveBox(Ref ref, String name) => ref.watch(hiveBoxesProvider)[name]!;
+
+final analyticsServiceProvider = Provider<AnalyticsService>((ref) {
+  return FirebaseAnalyticsService(FirebaseAnalytics.instance);
+});
+
+final remoteConfigServiceProvider = Provider<RemoteConfigService>((ref) {
+  return RemoteConfigServiceImpl(FirebaseRemoteConfig.instance);
+});

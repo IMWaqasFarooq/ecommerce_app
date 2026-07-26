@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/providers/core_providers.dart';
 import '../../../products/presentation/providers/product_providers.dart';
 import 'search_providers.dart';
 import 'search_state.dart';
@@ -47,6 +48,7 @@ class SearchNotifier extends _$SearchNotifier {
       (failure) async => state = state.copyWith(status: SearchStatus.failure, failure: failure),
       (products) async {
         await ref.read(searchHistoryRepositoryProvider).addQuery(query.trim());
+        await ref.read(analyticsServiceProvider).logSearch(query.trim());
         state = state.copyWith(
           status: SearchStatus.success,
           results: products,

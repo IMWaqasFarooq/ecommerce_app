@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../core/providers/core_providers.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../../../cart/presentation/providers/cart_notifier.dart';
 import '../../../orders/domain/entities/order.dart';
@@ -22,6 +23,10 @@ class CheckoutNotifier extends _$CheckoutNotifier {
   Future<CheckoutState> build() async {
     final result = await ref.watch(getSavedAddressesUseCaseProvider)(const NoParams());
     final addresses = result.fold((failure) => <Address>[], (addresses) => addresses);
+
+    final cartTotal = ref.read(cartProvider).value?.total ?? 0;
+    await ref.read(analyticsServiceProvider).logBeginCheckout(value: cartTotal);
+
     return CheckoutState(savedAddresses: addresses, selectedAddress: addresses.isEmpty ? null : addresses.first);
   }
 
@@ -105,6 +110,7 @@ class CheckoutNotifier extends _$CheckoutNotifier {
       (failure) async => state = AsyncData(current.copyWith(isPlacingOrder: false, failure: failure)),
       (createdOrder) async {
         await ref.read(cartProvider.notifier).clearCart();
+        await ref.read(analyticsServiceProvider).logPurchase(orderId: createdOrder.id, value: createdOrder.total);
         state = AsyncData(current.copyWith(isPlacingOrder: false, completedOrder: createdOrder));
       },
     );

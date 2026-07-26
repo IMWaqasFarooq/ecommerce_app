@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:ecommerce_app/core/providers/core_providers.dart';
 import 'package:ecommerce_app/features/products/domain/entities/product.dart';
 import 'package:ecommerce_app/features/products/domain/entities/product_review.dart';
 import 'package:ecommerce_app/features/products/domain/usecases/search_products_usecase.dart';
@@ -10,6 +11,8 @@ import 'package:ecommerce_app/features/search/presentation/providers/search_stat
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+
+import '../../../../helpers/fake_analytics_service.dart';
 
 class _MockSearchProductsUseCase extends Mock implements SearchProductsUseCase {}
 
@@ -48,6 +51,7 @@ void main() {
       overrides: [
         searchProductsUseCaseProvider.overrideWithValue(searchProducts),
         searchHistoryRepositoryProvider.overrideWithValue(searchHistoryRepository),
+        analyticsServiceProvider.overrideWithValue(FakeAnalyticsService()),
       ],
     );
     addTearDown(container.dispose);

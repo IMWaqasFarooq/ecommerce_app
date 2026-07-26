@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/providers/core_providers.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../../domain/entities/cart.dart';
 import '../../domain/usecases/add_to_cart_usecase.dart';
@@ -24,12 +25,16 @@ class CartNotifier extends _$CartNotifier {
     required String thumbnail,
     required double price,
     int quantity = 1,
-  }) {
-    return _mutate(
+  }) async {
+    final failure = await _mutate(
       ref.read(addToCartUseCaseProvider)(
         AddToCartParams(productId: productId, title: title, thumbnail: thumbnail, price: price, quantity: quantity),
       ),
     );
+    if (failure == null) {
+      await ref.read(analyticsServiceProvider).logAddToCart(productId: productId, name: title, price: price);
+    }
+    return failure;
   }
 
   Future<Failure?> updateQuantity(int productId, int quantity) {

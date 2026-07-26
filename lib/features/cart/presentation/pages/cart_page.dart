@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/providers/core_providers.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../providers/cart_notifier.dart';
@@ -15,6 +16,7 @@ class CartPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cartAsync = ref.watch(cartProvider);
     final notifier = ref.read(cartProvider.notifier);
+    final couponsEnabled = ref.read(remoteConfigServiceProvider).couponsEnabled;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Cart')),
@@ -51,19 +53,21 @@ class CartPage extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      CouponInput(
-                        appliedCoupon: cart.coupon,
-                        onApply: (code) async {
-                          final failure = await notifier.applyCoupon(code);
-                          if (failure != null && context.mounted) {
-                            ScaffoldMessenger.of(context)
-                              ..hideCurrentSnackBar()
-                              ..showSnackBar(SnackBar(content: Text(failure.message)));
-                          }
-                        },
-                        onRemove: notifier.removeCoupon,
-                      ),
-                      const SizedBox(height: AppSpacing.md),
+                      if (couponsEnabled) ...[
+                        CouponInput(
+                          appliedCoupon: cart.coupon,
+                          onApply: (code) async {
+                            final failure = await notifier.applyCoupon(code);
+                            if (failure != null && context.mounted) {
+                              ScaffoldMessenger.of(context)
+                                ..hideCurrentSnackBar()
+                                ..showSnackBar(SnackBar(content: Text(failure.message)));
+                            }
+                          },
+                          onRemove: notifier.removeCoupon,
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                      ],
                       _SummaryRow(label: 'Subtotal', value: cart.subtotal),
                       if (cart.coupon != null) _SummaryRow(label: 'Discount', value: -cart.discount),
                       _SummaryRow(label: 'Total', value: cart.total, emphasize: true),

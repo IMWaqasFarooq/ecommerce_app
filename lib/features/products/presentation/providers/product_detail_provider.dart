@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/providers/core_providers.dart';
 import '../../domain/entities/product.dart';
 import 'product_providers.dart';
 
@@ -8,7 +9,15 @@ part 'product_detail_provider.g.dart';
 @riverpod
 Future<Product> productDetail(Ref ref, int productId) async {
   final result = await ref.watch(getProductDetailUseCaseProvider)(productId);
-  return result.fold((failure) => throw failure, (product) => product);
+  final product = result.fold((failure) => throw failure, (product) => product);
+
+  await ref.read(analyticsServiceProvider).logViewProduct(
+        productId: product.id,
+        name: product.title,
+        price: product.price,
+      );
+
+  return product;
 }
 
 @riverpod

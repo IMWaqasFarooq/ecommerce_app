@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:ecommerce_app/core/error/failures.dart';
+import 'package:ecommerce_app/core/providers/core_providers.dart';
 import 'package:ecommerce_app/features/cart/domain/entities/cart.dart';
 import 'package:ecommerce_app/features/cart/domain/entities/cart_item.dart';
 import 'package:ecommerce_app/features/cart/domain/repositories/cart_repository.dart';
@@ -8,6 +9,8 @@ import 'package:ecommerce_app/features/cart/presentation/providers/cart_provider
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+
+import '../../../../helpers/fake_analytics_service.dart';
 
 class _MockCartRepository extends Mock implements CartRepository {}
 
@@ -19,7 +22,12 @@ void main() {
 
   setUp(() {
     repository = _MockCartRepository();
-    container = ProviderContainer(overrides: [cartRepositoryProvider.overrideWithValue(repository)]);
+    container = ProviderContainer(
+      overrides: [
+        cartRepositoryProvider.overrideWithValue(repository),
+        analyticsServiceProvider.overrideWithValue(FakeAnalyticsService()),
+      ],
+    );
     addTearDown(container.dispose);
   });
 
