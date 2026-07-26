@@ -2,11 +2,17 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../features/authentication/presentation/pages/home_placeholder_page.dart';
 import '../../features/authentication/presentation/pages/login_page.dart';
 import '../../features/authentication/presentation/pages/signup_page.dart';
 import '../../features/authentication/presentation/pages/splash_page.dart';
 import '../../features/authentication/presentation/providers/auth_state_provider.dart';
+import '../../features/cart/presentation/pages/cart_placeholder_page.dart';
+import '../../features/products/presentation/pages/product_detail_page.dart';
+import '../../features/products/presentation/pages/product_list_page.dart';
+import '../../features/profile/presentation/pages/profile_placeholder_page.dart';
+import '../../features/search/presentation/pages/search_page.dart';
+import '../../features/wishlist/presentation/pages/wishlist_placeholder_page.dart';
+import 'main_shell.dart';
 import 'route_paths.dart';
 
 part 'app_router.g.dart';
@@ -56,9 +62,57 @@ GoRouter router(Ref ref) {
         builder: (context, state) => const SignUpPage(),
       ),
       GoRoute(
-        path: RoutePaths.home,
-        name: RouteNames.home,
-        builder: (context, state) => const HomePlaceholderPage(),
+        path: RoutePaths.search,
+        name: RouteNames.search,
+        builder: (context, state) => const SearchPage(),
+      ),
+      GoRoute(
+        path: RoutePaths.productDetail,
+        name: RouteNames.productDetail,
+        builder: (context, state) => ProductDetailPage(
+          productId: int.parse(state.pathParameters['productId']!),
+        ),
+      ),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => MainShell(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RoutePaths.home,
+                name: RouteNames.home,
+                builder: (context, state) => const ProductListPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RoutePaths.wishlist,
+                name: RouteNames.wishlist,
+                builder: (context, state) => const WishlistPlaceholderPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RoutePaths.cart,
+                name: RouteNames.cart,
+                builder: (context, state) => const CartPlaceholderPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RoutePaths.profile,
+                name: RouteNames.profile,
+                builder: (context, state) => const ProfilePlaceholderPage(),
+              ),
+            ],
+          ),
+        ],
       ),
     ],
   );

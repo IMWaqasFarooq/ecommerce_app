@@ -65,7 +65,10 @@ void main() {
       await tester.enterText(find.widgetWithText(TextFormField, 'Password'), 'password123');
       await tester.tap(find.widgetWithText(FilledButton, 'Create account'));
 
-      await _pumpUntilFound(tester, find.textContaining('Signed in as'), maxTries: 40);
+      await _pumpUntilFound(tester, find.text('Velora'), maxTries: 40);
+
+      await tester.tap(find.text('Profile'));
+      await tester.pumpAndSettle();
       // displayName lands via a second userChanges() emission after the sign-in redirect already fired.
       await _pumpUntilFound(tester, find.textContaining('Test User'), maxTries: 15);
       expect(find.textContaining('Test User'), findsOneWidget);
