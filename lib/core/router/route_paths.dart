@@ -1,0 +1,30 @@
+abstract final class RoutePaths {
+  static const splash = '/splash';
+  static const login = '/login';
+  static const home = '/';
+  static const productDetail = '/product/:productId';
+  static const search = '/search';
+  static const cart = '/cart';
+  static const wishlist = '/wishlist';
+  static const checkout = '/checkout';
+  static const orders = '/orders';
+  static const orderDetail = '/orders/:orderId';
+  static const profile = '/profile';
+
+  static String productDetailPath(String productId) => '/product/$productId';
+  static String orderDetailPath(String orderId) => '/orders/$orderId';
+}
+
+abstract final class RouteNames {
+  static const splash = 'splash';
+  static const login = 'login';
+  static const home = 'home';
+  static const productDetail = 'productDetail';
+  static const search = 'search';
+  static const cart = 'cart';
+  static const wishlist = 'wishlist';
+  static const checkout = 'checkout';
+  static const orders = 'orders';
+  static const orderDetail = 'orderDetail';
+  static const profile = 'profile';
+}
