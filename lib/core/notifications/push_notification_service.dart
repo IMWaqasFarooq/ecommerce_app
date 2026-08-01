@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -28,8 +30,24 @@ class PushNotificationServiceImpl implements PushNotificationService {
 
     FirebaseMessaging.onMessage.listen(_showLocalNotification);
 
-    final token = await FirebaseMessaging.instance.getToken();
+    final token = await _fetchToken();
     debugPrint('FCM registration token: $token');
+  }
+
+  Future<String?> _fetchToken() async {
+    try {
+      if (Platform.isIOS && await FirebaseMessaging.instance.getAPNSToken() == null) {
+        await Future<void>.delayed(const Duration(seconds: 2));
+        if (await FirebaseMessaging.instance.getAPNSToken() == null) {
+          debugPrint('No APNs token (simulator, or not registered yet); skipping FCM token fetch.');
+          return null;
+        }
+      }
+      return await FirebaseMessaging.instance.getToken();
+    } catch (e) {
+      debugPrint('Failed to fetch FCM token: $e');
+      return null;
+    }
   }
 
   Future<void> _showLocalNotification(RemoteMessage message) async {
