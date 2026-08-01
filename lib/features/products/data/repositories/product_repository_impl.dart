@@ -4,6 +4,7 @@ import '../../../../core/error/exception_mapper.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
 import '../../domain/entities/product.dart';
+import '../../domain/entities/product_sort.dart';
 import '../../domain/repositories/product_repository.dart';
 import '../datasources/product_local_datasource.dart';
 import '../datasources/product_remote_datasource.dart';
@@ -24,17 +25,18 @@ class ProductRepositoryImpl implements ProductRepository {
   Future<Either<Failure, ({List<Product> products, int total})>> getProducts({
     required int page,
     int limit = 20,
+    ProductSort sort = ProductSort.featured,
   }) async {
     if (await networkInfo.isConnected) {
       try {
-        final response = await remoteDataSource.getProducts(page: page, limit: limit);
-        await localDataSource.cacheProducts(response.products, page: page, limit: limit);
+        final response = await remoteDataSource.getProducts(page: page, limit: limit, sort: sort);
+        await localDataSource.cacheProducts(response.products, page: page, limit: limit, sort: sort);
         return Right((
           products: response.products.map((p) => p.toEntity()).toList(),
           total: response.total,
         ));
       } catch (e) {
-        final cached = await localDataSource.getCachedProducts(page: page, limit: limit);
+        final cached = await localDataSource.getCachedProducts(page: page, limit: limit, sort: sort);
         if (cached != null) {
           return Right((products: cached.map((p) => p.toEntity()).toList(), total: cached.length));
         }
@@ -42,7 +44,7 @@ class ProductRepositoryImpl implements ProductRepository {
       }
     }
 
-    final cached = await localDataSource.getCachedProducts(page: page, limit: limit);
+    final cached = await localDataSource.getCachedProducts(page: page, limit: limit, sort: sort);
     if (cached != null) {
       return Right((products: cached.map((p) => p.toEntity()).toList(), total: cached.length));
     }
@@ -69,20 +71,23 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either<Failure, List<Product>>> getProductsByCategory(String category) async {
+  Future<Either<Failure, List<Product>>> getProductsByCategory(
+    String category, {
+    ProductSort sort = ProductSort.featured,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
-        final response = await remoteDataSource.getProductsByCategory(category);
-        await localDataSource.cacheProductsByCategory(category, response.products);
+        final response = await remoteDataSource.getProductsByCategory(category, sort: sort);
+        await localDataSource.cacheProductsByCategory(category, response.products, sort: sort);
         return Right(response.products.map((p) => p.toEntity()).toList());
       } catch (e) {
-        final cached = await localDataSource.getCachedProductsByCategory(category);
+        final cached = await localDataSource.getCachedProductsByCategory(category, sort: sort);
         if (cached != null) return Right(cached.map((p) => p.toEntity()).toList());
         return Left(await mapExceptionToFailure(e));
       }
     }
 
-    final cached = await localDataSource.getCachedProductsByCategory(category);
+    final cached = await localDataSource.getCachedProductsByCategory(category, sort: sort);
     if (cached != null) return Right(cached.map((p) => p.toEntity()).toList());
     return const Left(Failure.network(message: 'No internet connection and no cached data'));
   }

@@ -1,14 +1,31 @@
 import 'package:hive/hive.dart';
 
+import '../../domain/entities/product_sort.dart';
 import '../models/product_model.dart';
 
 abstract class ProductLocalDataSource {
-  Future<List<ProductModel>?> getCachedProducts({required int page, required int limit});
-  Future<void> cacheProducts(List<ProductModel> products, {required int page, required int limit});
+  Future<List<ProductModel>?> getCachedProducts({
+    required int page,
+    required int limit,
+    ProductSort sort = ProductSort.featured,
+  });
+  Future<void> cacheProducts(
+    List<ProductModel> products, {
+    required int page,
+    required int limit,
+    ProductSort sort = ProductSort.featured,
+  });
   Future<ProductModel?> getCachedProductDetail(int id);
   Future<void> cacheProductDetail(ProductModel product);
-  Future<List<ProductModel>?> getCachedProductsByCategory(String category);
-  Future<void> cacheProductsByCategory(String category, List<ProductModel> products);
+  Future<List<ProductModel>?> getCachedProductsByCategory(
+    String category, {
+    ProductSort sort = ProductSort.featured,
+  });
+  Future<void> cacheProductsByCategory(
+    String category,
+    List<ProductModel> products, {
+    ProductSort sort = ProductSort.featured,
+  });
 }
 
 class ProductLocalDataSourceImpl implements ProductLocalDataSource {
@@ -16,8 +33,12 @@ class ProductLocalDataSourceImpl implements ProductLocalDataSource {
   final Box<dynamic> _box;
 
   @override
-  Future<List<ProductModel>?> getCachedProducts({required int page, required int limit}) async {
-    final raw = _box.get('products_page_${page}_$limit') as List<dynamic>?;
+  Future<List<ProductModel>?> getCachedProducts({
+    required int page,
+    required int limit,
+    ProductSort sort = ProductSort.featured,
+  }) async {
+    final raw = _box.get('products_page_${page}_${limit}_${sort.name}') as List<dynamic>?;
     if (raw == null) return null;
     return raw
         .map((json) => ProductModel.fromJson(Map<String, dynamic>.from(json as Map)))
@@ -25,8 +46,16 @@ class ProductLocalDataSourceImpl implements ProductLocalDataSource {
   }
 
   @override
-  Future<void> cacheProducts(List<ProductModel> products, {required int page, required int limit}) {
-    return _box.put('products_page_${page}_$limit', products.map((p) => p.toJson()).toList());
+  Future<void> cacheProducts(
+    List<ProductModel> products, {
+    required int page,
+    required int limit,
+    ProductSort sort = ProductSort.featured,
+  }) {
+    return _box.put(
+      'products_page_${page}_${limit}_${sort.name}',
+      products.map((p) => p.toJson()).toList(),
+    );
   }
 
   @override
@@ -42,8 +71,11 @@ class ProductLocalDataSourceImpl implements ProductLocalDataSource {
   }
 
   @override
-  Future<List<ProductModel>?> getCachedProductsByCategory(String category) async {
-    final raw = _box.get('products_category_$category') as List<dynamic>?;
+  Future<List<ProductModel>?> getCachedProductsByCategory(
+    String category, {
+    ProductSort sort = ProductSort.featured,
+  }) async {
+    final raw = _box.get('products_category_${category}_${sort.name}') as List<dynamic>?;
     if (raw == null) return null;
     return raw
         .map((json) => ProductModel.fromJson(Map<String, dynamic>.from(json as Map)))
@@ -51,7 +83,14 @@ class ProductLocalDataSourceImpl implements ProductLocalDataSource {
   }
 
   @override
-  Future<void> cacheProductsByCategory(String category, List<ProductModel> products) {
-    return _box.put('products_category_$category', products.map((p) => p.toJson()).toList());
+  Future<void> cacheProductsByCategory(
+    String category,
+    List<ProductModel> products, {
+    ProductSort sort = ProductSort.featured,
+  }) {
+    return _box.put(
+      'products_category_${category}_${sort.name}',
+      products.map((p) => p.toJson()).toList(),
+    );
   }
 }

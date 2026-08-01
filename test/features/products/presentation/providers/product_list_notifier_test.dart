@@ -1,7 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:ecommerce_app/core/error/failures.dart';
 import 'package:ecommerce_app/features/products/domain/entities/product.dart';
+import 'package:ecommerce_app/features/products/domain/entities/product_filter.dart';
 import 'package:ecommerce_app/features/products/domain/entities/product_review.dart';
+import 'package:ecommerce_app/features/products/domain/entities/product_sort.dart';
 import 'package:ecommerce_app/features/products/domain/usecases/get_products_by_category_usecase.dart';
 import 'package:ecommerce_app/features/products/domain/usecases/get_products_usecase.dart';
 import 'package:ecommerce_app/features/products/presentation/providers/product_list_notifier.dart';
@@ -89,7 +91,9 @@ void main() {
     when(
       () => getProducts(any()),
     ).thenAnswer((_) async => Right((products: [_product(1)], total: 1)));
-    when(() => getProductsByCategory('beauty')).thenAnswer((_) async => Right([_product(9)]));
+    when(
+      () => getProductsByCategory(const GetProductsByCategoryParams(category: 'beauty')),
+    ).thenAnswer((_) async => Right([_product(9)]));
 
     container.listen(productListProvider, (previous, next) {});
     await Future<void>.delayed(Duration.zero);
@@ -120,4 +124,76 @@ void main() {
     expect(state.failure, const Failure.network());
     expect(state.products, List.generate(20, _product));
   });
+
+  test('changeSort refetches page 1 with the new sort and resets pagination', () async {
+    when(
+      () => getProducts(const GetProductsParams(page: 1, limit: 20)),
+    ).thenAnswer((_) async => Right((products: List.generate(20, _product), total: 40)));
+    when(() => getProducts(const GetProductsParams(page: 2, limit: 20))).thenAnswer(
+      (_) async => Right((products: List.generate(20, (i) => _product(i + 20)), total: 40)),
+    );
+    when(
+      () => getProducts(
+        const GetProductsParams(page: 1, limit: 20, sort: ProductSort.priceLowToHigh),
+      ),
+    ).thenAnswer((_) async => Right((products: [_product(99)], total: 1)));
+
+    container.listen(productListProvider, (previous, next) {});
+    await Future<void>.delayed(Duration.zero);
+    await container.read(productListProvider.notifier).loadMore();
+
+    await container.read(productListProvider.notifier).changeSort(ProductSort.priceLowToHigh);
+
+    final state = container.read(productListProvider);
+    expect(state.sort, ProductSort.priceLowToHigh);
+    expect(state.products, [_product(99)]);
+    expect(state.currentPage, 1);
+  });
+
+  test('changeSort is a no-op when the sort is unchanged', () async {
+    when(
+      () => getProducts(any()),
+    ).thenAnswer((_) async => Right((products: [_product(1)], total: 1)));
+
+    container.listen(productListProvider, (previous, next) {});
+    await Future<void>.delayed(Duration.zero);
+
+    await container.read(productListProvider.notifier).changeSort(ProductSort.featured);
+
+    verify(() => getProducts(any())).called(1);
+  });
+
+  test('applyFilter narrows displayedProducts without refetching', () async {
+    when(() => getProducts(any())).thenAnswer(
+      (_) async => Right((products: [_productWithPrice(1, 5), _productWithPrice(2, 50)], total: 2)),
+    );
+
+    container.listen(productListProvider, (previous, next) {});
+    await Future<void>.delayed(Duration.zero);
+
+    container.read(productListProvider.notifier).applyFilter(const ProductFilter(minPrice: 10));
+
+    final state = container.read(productListProvider);
+    expect(state.filter.isActive, isTrue);
+    expect(state.products, hasLength(2));
+    expect(state.displayedProducts, hasLength(1));
+    expect(state.displayedProducts.single.id, 2);
+    verify(() => getProducts(any())).called(1);
+  });
 }
+
+Product _productWithPrice(int productId, double price) => Product(
+  id: productId,
+  title: 'Product $productId',
+  description: 'Description',
+  category: 'beauty',
+  price: price,
+  discountPercentage: 0,
+  rating: 4.5,
+  stock: 5,
+  brand: 'Brand',
+  thumbnail: 'https://example.com/$productId.png',
+  images: const [],
+  availabilityStatus: 'In Stock',
+  reviews: const <ProductReview>[],
+);

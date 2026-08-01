@@ -1,5 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../domain/entities/product_filter.dart';
+import '../../domain/entities/product_sort.dart';
+import '../../domain/usecases/get_products_by_category_usecase.dart';
 import '../../domain/usecases/get_products_usecase.dart';
 import 'product_list_state.dart';
 import 'product_providers.dart';
@@ -29,13 +32,23 @@ class ProductListNotifier extends _$ProductListNotifier {
     await _load(page: 1);
   }
 
+  Future<void> changeSort(ProductSort sort) async {
+    if (sort == state.sort) return;
+    state = state.copyWith(sort: sort);
+    await _load(page: 1);
+  }
+
+  void applyFilter(ProductFilter filter) {
+    state = state.copyWith(filter: filter);
+  }
+
   Future<void> _load({required int page, bool append = false}) async {
     if (!append) state = state.copyWith(status: ProductListStatus.loading);
 
     final category = state.selectedCategory;
     if (category == null) {
       final result = await ref.read(getProductsUseCaseProvider)(
-        GetProductsParams(page: page, limit: _perPage),
+        GetProductsParams(page: page, limit: _perPage, sort: state.sort),
       );
       result.fold(
         (failure) => state = state.copyWith(
@@ -53,7 +66,9 @@ class ProductListNotifier extends _$ProductListNotifier {
         ),
       );
     } else {
-      final result = await ref.read(getProductsByCategoryUseCaseProvider)(category);
+      final result = await ref.read(getProductsByCategoryUseCaseProvider)(
+        GetProductsByCategoryParams(category: category, sort: state.sort),
+      );
       result.fold(
         (failure) => state = state.copyWith(
           status: ProductListStatus.failure,

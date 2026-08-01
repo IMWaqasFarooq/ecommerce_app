@@ -6,10 +6,14 @@ import '../../../../core/router/route_paths.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../categories/presentation/providers/categories_provider.dart';
 import '../../../categories/presentation/widgets/category_chip.dart';
+import '../../domain/entities/product_filter.dart';
 import '../providers/product_list_notifier.dart';
 import '../providers/product_list_state.dart';
+import '../widgets/filter_bottom_sheet.dart';
 import '../widgets/product_card.dart';
 import '../widgets/skeleton_product_grid.dart';
+import '../widgets/sort_bottom_sheet.dart';
+import '../widgets/sort_filter_pill.dart';
 
 class ProductListPage extends ConsumerStatefulWidget {
   const ProductListPage({super.key});
@@ -85,6 +89,18 @@ class _ProductListPageState extends ConsumerState<ProductListPage> {
           Expanded(child: _buildBody(state)),
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: SortFilterPill(
+        filterActive: state.filter.isActive,
+        onSort: () async {
+          final sort = await showSortBottomSheet(context, state.sort);
+          if (sort != null) await ref.read(productListProvider.notifier).changeSort(sort);
+        },
+        onFilter: () async {
+          final filter = await showFilterBottomSheet(context, state.filter);
+          if (filter != null) ref.read(productListProvider.notifier).applyFilter(filter);
+        },
+      ),
     );
   }
 
@@ -109,23 +125,51 @@ class _ProductListPageState extends ConsumerState<ProductListPage> {
       );
     }
 
+    final displayedProducts = state.displayedProducts;
+
+    if (displayedProducts.isEmpty && state.filter.isActive) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('No products match your filters'),
+            const SizedBox(height: AppSpacing.sm),
+            OutlinedButton(
+              onPressed: () =>
+                  ref.read(productListProvider.notifier).applyFilter(ProductFilter.empty),
+              child: const Text('Clear filters'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (displayedProducts.isEmpty) {
+      return const Center(child: Text('No products found'));
+    }
+
     return RefreshIndicator(
       onRefresh: () => ref.read(productListProvider.notifier).refresh(),
       child: GridView.builder(
         controller: _scrollController,
-        padding: const EdgeInsets.all(AppSpacing.md),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.md,
+          AppSpacing.md,
+          AppSpacing.md,
+          AppSpacing.xxl + AppSpacing.lg,
+        ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           mainAxisSpacing: AppSpacing.md,
           crossAxisSpacing: AppSpacing.md,
           childAspectRatio: 0.62,
         ),
-        itemCount: state.products.length + (state.isLoadingMore ? 2 : 0),
+        itemCount: displayedProducts.length + (state.isLoadingMore ? 2 : 0),
         itemBuilder: (context, index) {
-          if (index >= state.products.length) {
+          if (index >= displayedProducts.length) {
             return const Center(child: CircularProgressIndicator());
           }
-          final product = state.products[index];
+          final product = displayedProducts[index];
           return ProductCard(
             product: product,
             onTap: () => context.push(RoutePaths.productDetailPath(product.id.toString())),
