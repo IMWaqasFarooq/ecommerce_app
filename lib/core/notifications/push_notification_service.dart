@@ -3,6 +3,10 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:hive/hive.dart';
+
+import '../preferences/notifications_preference_notifier.dart';
+import '../storage/hive_boxes.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -52,7 +56,7 @@ class PushNotificationServiceImpl implements PushNotificationService {
 
   Future<void> _showLocalNotification(RemoteMessage message) async {
     final notification = message.notification;
-    if (notification == null) return;
+    if (notification == null || !_notificationsEnabled) return;
 
     await _localNotifications.show(
       id: notification.hashCode,
@@ -63,5 +67,11 @@ class PushNotificationServiceImpl implements PushNotificationService {
         iOS: DarwinNotificationDetails(),
       ),
     );
+  }
+
+  bool get _notificationsEnabled {
+    if (!Hive.isBoxOpen(HiveBoxes.preferences)) return true;
+    final box = Hive.box<dynamic>(HiveBoxes.preferences);
+    return (box.get(pushNotificationsPreferenceKey) as bool?) ?? true;
   }
 }

@@ -7,13 +7,15 @@ import '../../features/authentication/presentation/pages/signup_page.dart';
 import '../../features/authentication/presentation/pages/splash_page.dart';
 import '../../features/authentication/presentation/providers/auth_state_provider.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
+import '../../features/checkout/presentation/pages/addresses_page.dart';
 import '../../features/checkout/presentation/pages/checkout_page.dart';
 import '../../features/checkout/presentation/pages/order_confirmation_page.dart';
 import '../../features/orders/presentation/pages/order_detail_page.dart';
 import '../../features/orders/presentation/pages/orders_list_page.dart';
 import '../../features/products/presentation/pages/product_detail_page.dart';
 import '../../features/products/presentation/pages/product_list_page.dart';
-import '../../features/profile/presentation/pages/profile_placeholder_page.dart';
+import '../../features/profile/presentation/pages/about_page.dart';
+import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/search/presentation/pages/search_page.dart';
 import '../../features/wishlist/presentation/pages/wishlist_page.dart';
 import 'main_shell.dart';
@@ -97,6 +99,16 @@ GoRouter router(Ref ref) {
         name: RouteNames.orderDetail,
         builder: (context, state) => OrderDetailPage(orderId: state.pathParameters['orderId']!),
       ),
+      GoRoute(
+        path: RoutePaths.addresses,
+        name: RouteNames.addresses,
+        builder: (context, state) => const AddressesPage(),
+      ),
+      GoRoute(
+        path: RoutePaths.about,
+        name: RouteNames.about,
+        builder: (context, state) => const AboutPage(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => MainShell(navigationShell: navigationShell),
         branches: [
@@ -132,7 +144,7 @@ GoRouter router(Ref ref) {
               GoRoute(
                 path: RoutePaths.profile,
                 name: RouteNames.profile,
-                builder: (context, state) => const ProfilePlaceholderPage(),
+                builder: (context, state) => const ProfilePage(),
               ),
             ],
           ),

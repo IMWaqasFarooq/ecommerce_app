@@ -47,6 +47,9 @@ class AuthController extends _$AuthController {
   Future<void> sendPasswordResetEmail(String email) =>
       _run(() => ref.read(sendPasswordResetEmailUseCaseProvider)(email));
 
+  Future<void> updateDisplayName(String displayName) =>
+      _run(() => ref.read(updateDisplayNameUseCaseProvider)(displayName));
+
   Future<void> signOut() => _run(() => ref.read(signOutUseCaseProvider)(const NoParams()));
 
   Future<void> _run<T>(

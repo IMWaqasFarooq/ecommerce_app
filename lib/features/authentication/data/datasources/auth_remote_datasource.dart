@@ -18,6 +18,7 @@ abstract class AuthRemoteDataSource {
     required String displayName,
   });
   Future<void> sendPasswordResetEmail(String email);
+  Future<AppUser> updateDisplayName(String displayName);
   Future<void> signOut();
 }
 
@@ -131,6 +132,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> sendPasswordResetEmail(String email) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } on fb.FirebaseAuthException catch (e) {
+      throw ServerException(_messageForFirebaseError(e));
+    }
+  }
+
+  @override
+  Future<AppUser> updateDisplayName(String displayName) async {
+    try {
+      final user = _firebaseAuth.currentUser;
+      if (user == null) throw const UnauthorizedException();
+      await user.updateDisplayName(displayName);
+      await user.reload();
+      return AppUser.fromFirebaseUser(_firebaseAuth.currentUser!);
     } on fb.FirebaseAuthException catch (e) {
       throw ServerException(_messageForFirebaseError(e));
     }

@@ -12,6 +12,8 @@ abstract final class RoutePaths {
   static const orders = '/orders';
   static const orderDetail = '/orders/:orderId';
   static const profile = '/profile';
+  static const addresses = '/profile/addresses';
+  static const about = '/profile/about';
 
   static String productDetailPath(String productId) => '/product/$productId';
   static String orderConfirmationPath(String orderId) => '/checkout/confirmation/$orderId';
@@ -32,4 +34,6 @@ abstract final class RouteNames {
   static const orders = 'orders';
   static const orderDetail = 'orderDetail';
   static const profile = 'profile';
+  static const addresses = 'addresses';
+  static const about = 'about';
 }

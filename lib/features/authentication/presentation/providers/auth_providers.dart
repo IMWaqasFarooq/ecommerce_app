@@ -11,6 +11,7 @@ import '../../domain/usecases/sign_in_with_email_password_usecase.dart';
 import '../../domain/usecases/sign_in_with_google_usecase.dart';
 import '../../domain/usecases/sign_out_usecase.dart';
 import '../../domain/usecases/sign_up_with_email_password_usecase.dart';
+import '../../domain/usecases/update_display_name_usecase.dart';
 import '../../domain/usecases/watch_auth_state_usecase.dart';
 
 final googleSignInProvider = Provider<GoogleSignIn>((ref) => GoogleSignIn.instance);
@@ -49,4 +50,8 @@ final sendPasswordResetEmailUseCaseProvider = Provider<SendPasswordResetEmailUse
 
 final signOutUseCaseProvider = Provider<SignOutUseCase>((ref) {
   return SignOutUseCase(ref.watch(authRepositoryProvider));
+});
+
+final updateDisplayNameUseCaseProvider = Provider<UpdateDisplayNameUseCase>((ref) {
+  return UpdateDisplayNameUseCase(ref.watch(authRepositoryProvider));
 });

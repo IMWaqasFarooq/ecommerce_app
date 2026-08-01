@@ -19,5 +19,6 @@ abstract class AuthRepository {
     required String displayName,
   });
   Future<Either<Failure, void>> sendPasswordResetEmail(String email);
+  Future<Either<Failure, AppUser>> updateDisplayName(String displayName);
   Future<Either<Failure, void>> signOut();
 }

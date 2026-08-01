@@ -78,6 +78,15 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Either<Failure, AppUser>> updateDisplayName(String displayName) async {
+    try {
+      return Right(await _remoteDataSource.updateDisplayName(displayName));
+    } catch (e) {
+      return Left(await mapExceptionToFailure(e));
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> signOut() async {
     try {
       await _remoteDataSource.signOut();

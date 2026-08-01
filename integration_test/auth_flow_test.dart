@@ -73,6 +73,8 @@ void main() {
     await _pumpUntilFound(tester, find.textContaining('Test User'), maxTries: 15);
     expect(find.textContaining('Test User'), findsOneWidget);
 
+    await tester.scrollUntilVisible(find.text('Log out'), 200);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Log out'));
     await _pumpUntilFound(tester, find.text('Welcome back'));
     expect(find.text('Welcome back'), findsOneWidget);

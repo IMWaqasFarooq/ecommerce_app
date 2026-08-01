@@ -5,6 +5,7 @@ import '../../../../core/storage/hive_boxes.dart';
 import '../../data/datasources/address_local_datasource.dart';
 import '../../data/repositories/address_repository_impl.dart';
 import '../../domain/repositories/address_repository.dart';
+import '../../domain/usecases/delete_address_usecase.dart';
 import '../../domain/usecases/get_saved_addresses_usecase.dart';
 import '../../domain/usecases/save_address_usecase.dart';
 
@@ -24,4 +25,7 @@ final getSavedAddressesUseCaseProvider = Provider(
 );
 final saveAddressUseCaseProvider = Provider(
   (ref) => SaveAddressUseCase(ref.watch(addressRepositoryProvider)),
+);
+final deleteAddressUseCaseProvider = Provider(
+  (ref) => DeleteAddressUseCase(ref.watch(addressRepositoryProvider)),
 );
