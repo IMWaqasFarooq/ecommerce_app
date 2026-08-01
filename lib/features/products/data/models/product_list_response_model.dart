@@ -7,6 +7,8 @@ part 'product_list_response_model.g.dart';
 
 @freezed
 abstract class ProductListResponseModel with _$ProductListResponseModel {
+  // ignore: invalid_annotation_target
+  @JsonSerializable(explicitToJson: true)
   const factory ProductListResponseModel({
     required List<ProductModel> products,
     required int total,

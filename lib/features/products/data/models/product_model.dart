@@ -8,6 +8,8 @@ part 'product_model.g.dart';
 
 @freezed
 abstract class ProductModel with _$ProductModel {
+  // ignore: invalid_annotation_target
+  @JsonSerializable(explicitToJson: true)
   const factory ProductModel({
     required int id,
     required String title,

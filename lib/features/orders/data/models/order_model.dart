@@ -9,6 +9,8 @@ part 'order_model.g.dart';
 
 @freezed
 abstract class OrderModel with _$OrderModel {
+  // ignore: invalid_annotation_target
+  @JsonSerializable(explicitToJson: true)
   const factory OrderModel({
     required String id,
     required List<OrderItemModel> items,
