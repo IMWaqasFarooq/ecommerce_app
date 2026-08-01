@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../../core/error/failure_code.dart';
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/cart.dart';
 import '../../domain/repositories/cart_repository.dart';
@@ -97,7 +98,7 @@ class CartRepositoryImpl implements CartRepository {
     final normalized = code.trim().toUpperCase();
     final discount = couponCatalog[normalized];
     if (discount == null) {
-      return const Left(Failure.validation(message: 'Invalid coupon code'));
+      return const Left(Failure.validation(code: FailureCode.validationInvalidCoupon));
     }
 
     final ownerKey = _ownerKey;

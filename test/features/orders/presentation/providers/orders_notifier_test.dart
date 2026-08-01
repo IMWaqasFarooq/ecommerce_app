@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart' hide Order;
+import 'package:ecommerce_app/core/error/failure_code.dart';
 import 'package:ecommerce_app/core/error/failures.dart';
 import 'package:ecommerce_app/features/orders/domain/entities/order.dart';
 import 'package:ecommerce_app/features/orders/domain/entities/order_status.dart';
@@ -23,7 +24,7 @@ void main() {
     shippingCost: 5,
     total: 15,
     shippingAddressText: '123 Main St',
-    shippingMethodLabel: 'Standard shipping',
+    shippingMethodId: 'standard',
     status: status,
     createdAt: DateTime(2026, 1, 1),
   );
@@ -66,7 +67,7 @@ void main() {
     when(() => repository.getOrders()).thenAnswer((_) async => Right(orders));
     when(() => repository.cancelOrder('order-1')).thenAnswer(
       (_) async =>
-          const Left(Failure.validation(message: 'Only processing orders can be cancelled')),
+          const Left(Failure.validation(code: FailureCode.validationOrderNotCancellable)),
     );
 
     container.listen(ordersProvider, (previous, next) {});
@@ -74,7 +75,7 @@ void main() {
 
     final failure = await container.read(ordersProvider.notifier).cancelOrder('order-1');
 
-    expect(failure, const Failure.validation(message: 'Only processing orders can be cancelled'));
+    expect(failure, const Failure.validation(code: FailureCode.validationOrderNotCancellable));
     expect(container.read(ordersProvider).value!.single.status, OrderStatus.shipped);
   });
 }

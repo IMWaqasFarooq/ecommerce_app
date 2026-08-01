@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/error/failure_localization.dart';
+import '../../../../core/formatting/locale_formatting.dart';
 import '../../../../core/providers/core_providers.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../providers/cart_notifier.dart';
 import '../widgets/cart_item_tile.dart';
 import '../widgets/coupon_input.dart';
@@ -14,18 +17,19 @@ class CartPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final cartAsync = ref.watch(cartProvider);
     final notifier = ref.read(cartProvider.notifier);
     final couponsEnabled = ref.read(remoteConfigServiceProvider).couponsEnabled;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Cart')),
+      appBar: AppBar(title: Text(l10n.cartTitle)),
       body: cartAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => const Center(child: Text('Failed to load cart')),
+        error: (error, stackTrace) => Center(child: Text(l10n.failedToLoadCart)),
         data: (cart) {
           if (cart.isEmpty) {
-            return const Center(child: Text('Your cart is empty'));
+            return Center(child: Text(l10n.cartEmpty));
           }
 
           return Column(
@@ -61,21 +65,23 @@ class CartPage extends ConsumerWidget {
                             if (failure != null && context.mounted) {
                               ScaffoldMessenger.of(context)
                                 ..hideCurrentSnackBar()
-                                ..showSnackBar(SnackBar(content: Text(failure.message)));
+                                ..showSnackBar(
+                                  SnackBar(content: Text(failure.localizedMessage(context))),
+                                );
                             }
                           },
                           onRemove: notifier.removeCoupon,
                         ),
                         const SizedBox(height: AppSpacing.md),
                       ],
-                      _SummaryRow(label: 'Subtotal', value: cart.subtotal),
+                      _SummaryRow(label: l10n.subtotalLabel, value: cart.subtotal),
                       if (cart.coupon != null)
-                        _SummaryRow(label: 'Discount', value: -cart.discount),
-                      _SummaryRow(label: 'Total', value: cart.total, emphasize: true),
+                        _SummaryRow(label: l10n.discountLabel, value: -cart.discount),
+                      _SummaryRow(label: l10n.totalLabel, value: cart.total, emphasize: true),
                       const SizedBox(height: AppSpacing.md),
                       FilledButton(
                         onPressed: () => context.push(RoutePaths.checkout),
-                        child: const Text('Proceed to checkout'),
+                        child: Text(l10n.proceedToCheckout),
                       ),
                     ],
                   ),
@@ -108,7 +114,7 @@ class _SummaryRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: style),
-          Text('\$${value.toStringAsFixed(2)}', style: style),
+          Text(formatPrice(context, value), style: style),
         ],
       ),
     );

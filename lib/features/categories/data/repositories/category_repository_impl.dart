@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/exception_mapper.dart';
+import '../../../../core/error/failure_code.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
 import '../../domain/entities/category.dart';
@@ -36,6 +37,6 @@ class CategoryRepositoryImpl implements CategoryRepository {
 
     final cached = await localDataSource.getCachedCategories();
     if (cached != null) return Right(cached.map((c) => c.toEntity()).toList());
-    return const Left(Failure.network(message: 'No internet connection and no cached data'));
+    return const Left(Failure.network(code: FailureCode.networkNoCachedData));
   }
 }

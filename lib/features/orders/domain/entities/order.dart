@@ -12,7 +12,7 @@ class Order extends Equatable {
     required this.shippingCost,
     required this.total,
     required this.shippingAddressText,
-    required this.shippingMethodLabel,
+    required this.shippingMethodId,
     required this.status,
     required this.createdAt,
   });
@@ -24,7 +24,7 @@ class Order extends Equatable {
   final double shippingCost;
   final double total;
   final String shippingAddressText;
-  final String shippingMethodLabel;
+  final String shippingMethodId;
   final OrderStatus status;
   final DateTime createdAt;
 
@@ -38,7 +38,7 @@ class Order extends Equatable {
     shippingCost: shippingCost,
     total: total,
     shippingAddressText: shippingAddressText,
-    shippingMethodLabel: shippingMethodLabel,
+    shippingMethodId: shippingMethodId,
     status: status ?? this.status,
     createdAt: createdAt,
   );
@@ -52,7 +52,7 @@ class Order extends Equatable {
     shippingCost,
     total,
     shippingAddressText,
-    shippingMethodLabel,
+    shippingMethodId,
     status,
     createdAt,
   ];

@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:ecommerce_app/core/error/failure_code.dart';
 import 'package:ecommerce_app/core/error/failures.dart';
 import 'package:ecommerce_app/core/providers/core_providers.dart';
 import 'package:ecommerce_app/features/cart/domain/entities/cart.dart';
@@ -44,13 +45,15 @@ void main() {
     when(() => repository.getCart()).thenAnswer((_) async => const Right(Cart(items: [item])));
     when(
       () => repository.applyCoupon('BAD'),
-    ).thenAnswer((_) async => const Left(Failure.validation(message: 'Invalid coupon code')));
+    ).thenAnswer(
+      (_) async => const Left(Failure.validation(code: FailureCode.validationInvalidCoupon)),
+    );
     container.listen(cartProvider, (previous, next) {});
 
     await container.read(cartProvider.future);
     final failure = await container.read(cartProvider.notifier).applyCoupon('BAD');
 
-    expect(failure, const Failure.validation(message: 'Invalid coupon code'));
+    expect(failure, const Failure.validation(code: FailureCode.validationInvalidCoupon));
     expect(container.read(cartProvider).value?.items, [item]);
   });
 

@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart' hide Order;
+import 'package:ecommerce_app/core/error/failure_code.dart';
 import 'package:ecommerce_app/core/error/failures.dart';
 import 'package:ecommerce_app/features/orders/data/datasources/order_local_datasource.dart';
 import 'package:ecommerce_app/features/orders/data/models/order_item_model.dart';
@@ -44,7 +45,7 @@ void main() {
     shippingCost: 4.99,
     total: 14.98,
     shippingAddressText: '123 Main St',
-    shippingMethodLabel: 'Standard shipping',
+    shippingMethodId: 'standard',
     status: OrderStatus.processing,
     createdAt: DateTime(2026, 1, 1),
   );
@@ -68,7 +69,7 @@ void main() {
     expect(
       result,
       const Left<Failure, dynamic>(
-        Failure.validation(message: 'Only processing orders can be cancelled'),
+        Failure.validation(code: FailureCode.validationOrderNotCancellable),
       ),
     );
     verifyNever(() => localDataSource.saveOrders(any(), any()));
@@ -92,6 +93,6 @@ void main() {
 
     final result = await repository.getOrderById('missing');
 
-    expect(result, const Left<Failure, dynamic>(Failure.unknown(message: 'Order not found')));
+    expect(result, const Left<Failure, dynamic>(Failure.unknown(code: FailureCode.orderNotFound)));
   });
 }

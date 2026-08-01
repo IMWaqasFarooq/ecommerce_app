@@ -1,28 +1,35 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import 'exceptions.dart';
+import 'failure_code.dart';
 import 'failures.dart';
 
 Future<Failure> mapExceptionToFailure(Object error) async {
   return switch (error) {
-    NetworkException(:final message) => Failure.network(message: message),
-    UnauthorizedException(:final message) => Failure.unauthorized(message: message),
-    ValidationException(:final message) => Failure.validation(message: message),
-    PaymentException(:final message, :final declineCode) => Failure.payment(
-      message: message,
+    NetworkException(:final code) => Failure.network(code: code),
+    UnauthorizedException(:final code) => Failure.unauthorized(code: code),
+    ValidationException(:final code) => Failure.validation(code: code),
+    PaymentException(:final code, :final declineCode) => Failure.payment(
+      code: code,
       declineCode: declineCode,
     ),
-    ServerException(:final message, :final statusCode) => Failure.server(
-      message: message,
+    ServerException(:final code, :final statusCode) => Failure.server(
+      code: code,
       statusCode: statusCode,
     ),
-    CacheException(:final message) => Failure.cache(message: message),
+    CacheException(:final code) => Failure.cache(code: code),
     SocketException() => const Failure.network(),
     DioException() => _mapDioException(error),
-    _ => Failure.unknown(message: error.toString()),
+    _ => _mapUnknown(error),
   };
+}
+
+Failure _mapUnknown(Object error) {
+  debugPrint('Unhandled error mapped to Failure.unknown: $error');
+  return const Failure.unknown();
 }
 
 Failure _mapDioException(DioException error) {
@@ -36,8 +43,6 @@ Failure _mapDioException(DioException error) {
   if (statusCode == 401 || statusCode == 403) {
     return const Failure.unauthorized();
   }
-  return Failure.server(
-    message: error.response?.statusMessage ?? error.message ?? 'Server error',
-    statusCode: statusCode,
-  );
+  debugPrint('Dio error mapped to Failure.server: ${error.message}');
+  return Failure.server(code: FailureCode.server, statusCode: statusCode);
 }

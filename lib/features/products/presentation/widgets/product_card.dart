@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/translation/translated_text.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../wishlist/presentation/providers/wishlist_notifier.dart';
 import '../../domain/entities/product.dart';
 import 'price_tag.dart';
@@ -53,7 +55,7 @@ class ProductCard extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
-                          'Out of stock',
+                          AppLocalizations.of(context).outOfStock,
                           style: TextStyle(
                             fontSize: 11,
                             color: Theme.of(context).colorScheme.onErrorContainer,
@@ -89,7 +91,7 @@ class ProductCard extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  TranslatedText(
                     product.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

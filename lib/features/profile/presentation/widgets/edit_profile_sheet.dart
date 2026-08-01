@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../authentication/presentation/providers/auth_controller_provider.dart';
 
 Future<void> showEditProfileSheet(BuildContext context, {required String currentName}) {
@@ -39,6 +40,7 @@ class _EditProfileSheetState extends ConsumerState<_EditProfileSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final isLoading = ref.watch(authControllerProvider).isLoading;
 
     return Padding(
@@ -54,12 +56,13 @@ class _EditProfileSheetState extends ConsumerState<_EditProfileSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Edit profile', style: Theme.of(context).textTheme.titleMedium),
+            Text(l10n.editProfile, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: AppSpacing.md),
             TextFormField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Full name'),
-              validator: (value) => (value == null || value.trim().isEmpty) ? 'Enter your name' : null,
+              decoration: InputDecoration(labelText: l10n.fullNameLabel),
+              validator: (value) =>
+                  (value == null || value.trim().isEmpty) ? l10n.enterYourName : null,
             ),
             const SizedBox(height: AppSpacing.md),
             FilledButton(
@@ -70,7 +73,7 @@ class _EditProfileSheetState extends ConsumerState<_EditProfileSheet> {
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2.5),
                     )
-                  : const Text('Save'),
+                  : Text(l10n.saveButton),
             ),
           ],
         ),

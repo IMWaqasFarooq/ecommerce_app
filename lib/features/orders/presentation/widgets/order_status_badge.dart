@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/order_status.dart';
+import '../utils/order_status_l10n.dart';
 
 class OrderStatusBadge extends StatelessWidget {
   const OrderStatusBadge({required this.status, super.key});
@@ -10,11 +11,11 @@ class OrderStatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final (label, color) = switch (status) {
-      OrderStatus.processing => ('Processing', scheme.primary),
-      OrderStatus.shipped => ('Shipped', scheme.tertiary),
-      OrderStatus.delivered => ('Delivered', Colors.green),
-      OrderStatus.cancelled => ('Cancelled', scheme.error),
+    final color = switch (status) {
+      OrderStatus.processing => scheme.primary,
+      OrderStatus.shipped => scheme.tertiary,
+      OrderStatus.delivered => Colors.green,
+      OrderStatus.cancelled => scheme.error,
     };
 
     return Container(
@@ -24,7 +25,7 @@ class OrderStatusBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
-        label,
+        status.localizedLabel(context),
         style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600),
       ),
     );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/formatting/locale_formatting.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/entities/product_filter.dart';
 
 const _ratingOptions = [4.0, 3.0, 2.0, 1.0];
@@ -56,6 +58,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: EdgeInsets.only(
         left: AppSpacing.md,
@@ -68,9 +71,12 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Filter', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+            Text(
+              l10n.filterTitle,
+              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+            ),
             const SizedBox(height: AppSpacing.md),
-            Text('Price', style: Theme.of(context).textTheme.titleSmall),
+            Text(l10n.priceLabel, style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: AppSpacing.xs),
             Row(
               children: [
@@ -78,7 +84,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                   child: TextField(
                     controller: _minPriceController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: 'Min', prefixText: '\$'),
+                    decoration: InputDecoration(labelText: l10n.minLabel, prefixText: '\$'),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
@@ -86,20 +92,20 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                   child: TextField(
                     controller: _maxPriceController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: 'Max', prefixText: '\$'),
+                    decoration: InputDecoration(labelText: l10n.maxLabel, prefixText: '\$'),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: AppSpacing.md),
-            Text('Minimum rating', style: Theme.of(context).textTheme.titleSmall),
+            Text(l10n.minimumRating, style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: AppSpacing.xs),
             Wrap(
               spacing: AppSpacing.xs,
               children: [
                 for (final rating in _ratingOptions)
                   ChoiceChip(
-                    label: Text('$rating+'),
+                    label: Text('${formatDecimal(context, rating, decimalDigits: 1)}+'),
                     selected: _minRating == rating,
                     onSelected: (selected) => setState(() => _minRating = selected ? rating : null),
                   ),
@@ -108,7 +114,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
             const SizedBox(height: AppSpacing.sm),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('In stock only'),
+              title: Text(l10n.inStockOnly),
               value: _inStockOnly,
               onChanged: (value) => setState(() => _inStockOnly = value),
             ),
@@ -116,11 +122,11 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton(onPressed: _clear, child: const Text('Clear all')),
+                  child: OutlinedButton(onPressed: _clear, child: Text(l10n.clearAll)),
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
-                  child: FilledButton(onPressed: _apply, child: const Text('Apply')),
+                  child: FilledButton(onPressed: _apply, child: Text(l10n.apply)),
                 ),
               ],
             ),

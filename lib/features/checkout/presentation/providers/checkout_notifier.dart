@@ -111,7 +111,7 @@ class CheckoutNotifier extends _$CheckoutNotifier {
       shippingCost: shipping.cost,
       total: total,
       shippingAddressText: address.formatted,
-      shippingMethodLabel: shipping.label,
+      shippingMethodId: shipping.id,
       status: OrderStatus.processing,
       createdAt: DateTime.now(),
     );

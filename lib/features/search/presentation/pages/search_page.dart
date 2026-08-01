@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/error/failure_localization.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../products/presentation/widgets/product_card.dart';
 import '../../../products/presentation/widgets/skeleton_product_grid.dart';
 import '../providers/search_notifier.dart';
@@ -27,6 +29,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(searchProvider);
     final notifier = ref.read(searchProvider.notifier);
 
@@ -35,7 +38,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
         title: TextField(
           controller: _controller,
           autofocus: true,
-          decoration: const InputDecoration(hintText: 'Search products', border: InputBorder.none),
+          decoration: InputDecoration(hintText: l10n.searchProductsHint, border: InputBorder.none),
           textInputAction: TextInputAction.search,
           onChanged: notifier.onQueryChanged,
           onSubmitted: notifier.submit,
@@ -56,6 +59,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   }
 
   Widget _buildBody(BuildContext context, SearchState state, SearchNotifier notifier) {
+    final l10n = AppLocalizations.of(context);
     if (state.query.trim().isEmpty) {
       return _buildHistory(context, state, notifier);
     }
@@ -65,11 +69,13 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     }
 
     if (state.status == SearchStatus.failure) {
-      return Center(child: Text(state.failure?.message ?? 'Something went wrong'));
+      return Center(
+        child: Text(state.failure?.localizedMessage(context) ?? l10n.somethingWentWrong),
+      );
     }
 
     if (state.results.isEmpty) {
-      return const Center(child: Text('No products found'));
+      return Center(child: Text(l10n.noProductsFound));
     }
 
     return GridView.builder(
@@ -92,8 +98,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   }
 
   Widget _buildHistory(BuildContext context, SearchState state, SearchNotifier notifier) {
+    final l10n = AppLocalizations.of(context);
     if (state.history.isEmpty) {
-      return const Center(child: Text('Search for products by name, brand, or category'));
+      return Center(child: Text(l10n.searchEmptyPrompt));
     }
 
     return ListView(
@@ -104,8 +111,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Recent searches', style: Theme.of(context).textTheme.titleSmall),
-              TextButton(onPressed: notifier.clearHistory, child: const Text('Clear')),
+              Text(l10n.recentSearches, style: Theme.of(context).textTheme.titleSmall),
+              TextButton(onPressed: notifier.clearHistory, child: Text(l10n.clearButton)),
             ],
           ),
         ),

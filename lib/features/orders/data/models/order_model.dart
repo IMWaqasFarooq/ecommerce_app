@@ -19,7 +19,7 @@ abstract class OrderModel with _$OrderModel {
     required double shippingCost,
     required double total,
     required String shippingAddressText,
-    required String shippingMethodLabel,
+    required String shippingMethodId,
     required OrderStatus status,
     required DateTime createdAt,
   }) = _OrderModel;
@@ -36,7 +36,7 @@ extension OrderModelMapper on OrderModel {
     shippingCost: shippingCost,
     total: total,
     shippingAddressText: shippingAddressText,
-    shippingMethodLabel: shippingMethodLabel,
+    shippingMethodId: shippingMethodId,
     status: status,
     createdAt: createdAt,
   );
@@ -51,7 +51,7 @@ extension OrderEntityMapper on Order {
     shippingCost: shippingCost,
     total: total,
     shippingAddressText: shippingAddressText,
-    shippingMethodLabel: shippingMethodLabel,
+    shippingMethodId: shippingMethodId,
     status: status,
     createdAt: createdAt,
   );

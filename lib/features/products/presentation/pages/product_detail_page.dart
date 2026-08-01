@@ -2,10 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
+import '../../../../core/formatting/locale_formatting.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/translation/translated_text.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../cart/presentation/providers/cart_notifier.dart';
 import '../../../wishlist/presentation/providers/wishlist_notifier.dart';
 import '../../domain/entities/product.dart';
@@ -36,12 +38,13 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final productAsync = ref.watch(productDetailProvider(widget.productId));
 
     return Scaffold(
       body: productAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => Center(child: Text('Failed to load product')),
+        error: (error, stackTrace) => Center(child: Text(l10n.failedToLoadProduct)),
         data: (product) => _buildContent(context, product),
       ),
       bottomNavigationBar: productAsync.maybeWhen(
@@ -52,6 +55,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
   }
 
   Widget _buildContent(BuildContext context, Product product) {
+    final l10n = AppLocalizations.of(context);
     final relatedAsync = ref.watch(relatedProductsProvider(product.category, product.id));
 
     return CustomScrollView(
@@ -124,19 +128,20 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
           padding: const EdgeInsets.all(AppSpacing.md),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              Text(
-                product.brand.isNotEmpty ? product.brand : product.category,
-                style: AppTextStyles.caption(context),
-              ),
+              product.brand.isNotEmpty
+                  ? Text(product.brand, style: AppTextStyles.caption(context))
+                  : TranslatedText(product.category, style: AppTextStyles.caption(context)),
               const SizedBox(height: AppSpacing.xxs),
-              Text(product.title, style: Theme.of(context).textTheme.headlineSmall),
+              TranslatedText(product.title, style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: AppSpacing.sm),
               Row(
                 children: [
                   RatingStars(rating: product.rating, size: 18),
                   const SizedBox(width: AppSpacing.sm),
                   Text(
-                    product.inStock ? 'In stock (${product.stock})' : 'Out of stock',
+                    product.inStock
+                        ? localizeDigits(context, l10n.inStockWithCount(product.stock))
+                        : l10n.outOfStock,
                     style: AppTextStyles.caption(context),
                   ),
                 ],
@@ -144,13 +149,13 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
               const SizedBox(height: AppSpacing.md),
               PriceTag(product: product, large: true),
               const SizedBox(height: AppSpacing.lg),
-              Text('Description', style: AppTextStyles.sectionTitle(context)),
+              Text(l10n.descriptionSectionTitle, style: AppTextStyles.sectionTitle(context)),
               const SizedBox(height: AppSpacing.xs),
-              Text(product.description, style: Theme.of(context).textTheme.bodyMedium),
+              TranslatedText(product.description, style: Theme.of(context).textTheme.bodyMedium),
               const SizedBox(height: AppSpacing.lg),
               if (product.reviews.isNotEmpty) ...[
                 Text(
-                  'Reviews (${product.reviews.length})',
+                  localizeDigits(context, l10n.reviewsSectionTitle(product.reviews.length)),
                   style: AppTextStyles.sectionTitle(context),
                 ),
                 const SizedBox(height: AppSpacing.xs),
@@ -163,7 +168,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('You might also like', style: AppTextStyles.sectionTitle(context)),
+                          Text(l10n.youMightAlsoLike, style: AppTextStyles.sectionTitle(context)),
                           const SizedBox(height: AppSpacing.sm),
                           SizedBox(
                             height: 240,
@@ -201,6 +206,7 @@ class _AddToCartBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
@@ -219,11 +225,11 @@ class _AddToCartBar extends ConsumerWidget {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context)
                       ..hideCurrentSnackBar()
-                      ..showSnackBar(const SnackBar(content: Text('Added to cart')));
+                      ..showSnackBar(SnackBar(content: Text(l10n.addedToCart)));
                   }
                 },
           icon: const Icon(Icons.shopping_bag_outlined),
-          label: Text(product.inStock ? 'Add to cart' : 'Out of stock'),
+          label: Text(product.inStock ? l10n.addToCart : l10n.outOfStock),
         ),
       ),
     );
@@ -253,11 +259,11 @@ class _ReviewTile extends StatelessWidget {
               const SizedBox(width: AppSpacing.sm),
               RatingStars(rating: review.rating.toDouble(), size: 14),
               const Spacer(),
-              Text(DateFormat.yMMMd().format(review.date), style: AppTextStyles.caption(context)),
+              Text(formatDate(context, review.date), style: AppTextStyles.caption(context)),
             ],
           ),
           const SizedBox(height: AppSpacing.xxs),
-          Text(review.comment, style: Theme.of(context).textTheme.bodySmall),
+          TranslatedText(review.comment, style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
     );

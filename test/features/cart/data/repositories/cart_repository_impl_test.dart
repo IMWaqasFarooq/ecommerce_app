@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:ecommerce_app/core/error/failure_code.dart';
 import 'package:ecommerce_app/core/error/failures.dart';
 import 'package:ecommerce_app/features/cart/data/datasources/cart_local_datasource.dart';
 import 'package:ecommerce_app/features/cart/data/models/cart_item_model.dart';
@@ -67,7 +68,7 @@ void main() {
 
       expect(
         result,
-        const Left<Failure, dynamic>(Failure.validation(message: 'Invalid coupon code')),
+        const Left<Failure, dynamic>(Failure.validation(code: FailureCode.validationInvalidCoupon)),
       );
       verifyNever(() => localDataSource.saveCoupon(any(), any()));
     });

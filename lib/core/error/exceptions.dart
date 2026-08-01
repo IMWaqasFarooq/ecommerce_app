@@ -1,31 +1,35 @@
+import 'failure_code.dart';
+
 class ServerException implements Exception {
-  const ServerException(this.message, {this.statusCode});
-  final String message;
+  const ServerException(this.code, {this.statusCode, this.debugMessage});
+  final FailureCode code;
   final int? statusCode;
+  final String? debugMessage;
 }
 
 class NetworkException implements Exception {
-  const NetworkException([this.message = 'No internet connection']);
-  final String message;
+  const NetworkException([this.code = FailureCode.network]);
+  final FailureCode code;
 }
 
 class CacheException implements Exception {
-  const CacheException([this.message = 'Local cache error']);
-  final String message;
+  const CacheException([this.code = FailureCode.cache]);
+  final FailureCode code;
 }
 
 class UnauthorizedException implements Exception {
-  const UnauthorizedException([this.message = 'Session expired']);
-  final String message;
+  const UnauthorizedException([this.code = FailureCode.sessionExpired, this.debugMessage]);
+  final FailureCode code;
+  final String? debugMessage;
 }
 
 class ValidationException implements Exception {
-  const ValidationException(this.message);
-  final String message;
+  const ValidationException(this.code);
+  final FailureCode code;
 }
 
 class PaymentException implements Exception {
-  const PaymentException(this.message, {this.declineCode});
-  final String message;
+  const PaymentException(this.code, {this.declineCode});
+  final FailureCode code;
   final String? declineCode;
 }

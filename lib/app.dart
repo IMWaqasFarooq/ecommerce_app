@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/analytics/analytics_auth_observer.dart';
 import 'core/config/flavor.dart';
+import 'core/preferences/locale_notifier.dart';
 import 'core/preferences/theme_mode_notifier.dart';
 import 'core/router/app_router.dart';
 import 'core/sync/guest_data_sync_observer.dart';
 import 'core/theme/app_theme.dart';
+import 'l10n/generated/app_localizations.dart';
 
 class VeloraApp extends ConsumerWidget {
   const VeloraApp({super.key, required this.flavor});
@@ -19,6 +21,7 @@ class VeloraApp extends ConsumerWidget {
     ref.watch(analyticsAuthObserverProvider);
     final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeModeProvider);
+    final locale = ref.watch(localeProvider);
 
     return MaterialApp.router(
       title: 'Velora',
@@ -26,6 +29,9 @@ class VeloraApp extends ConsumerWidget {
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       themeMode: themeMode,
+      locale: locale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: router,
     );
   }

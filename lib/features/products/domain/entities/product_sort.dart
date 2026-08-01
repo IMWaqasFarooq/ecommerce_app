@@ -13,12 +13,4 @@ extension ProductSortQuery on ProductSort {
     ProductSort.priceLowToHigh || ProductSort.titleAZ => 'asc',
     ProductSort.priceHighToLow || ProductSort.ratingHighToLow => 'desc',
   };
-
-  String get label => switch (this) {
-    ProductSort.featured => 'Featured',
-    ProductSort.priceLowToHigh => 'Price: Low to High',
-    ProductSort.priceHighToLow => 'Price: High to Low',
-    ProductSort.ratingHighToLow => 'Rating: High to Low',
-    ProductSort.titleAZ => 'Name: A to Z',
-  };
 }

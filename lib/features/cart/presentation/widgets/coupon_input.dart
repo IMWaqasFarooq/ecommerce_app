@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/formatting/locale_formatting.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/entities/coupon.dart';
 
 class CouponInput extends StatefulWidget {
@@ -37,20 +39,23 @@ class _CouponInputState extends State<CouponInput> {
         children: [
           Chip(
             avatar: const Icon(Icons.local_offer_outlined, size: 16),
-            label: Text('${coupon.code} (-${coupon.discountPercentage.round()}%)'),
+            label: Text(
+              '${coupon.code} (-${formatDecimal(context, coupon.discountPercentage.round())}%)',
+            ),
             onDeleted: widget.onRemove,
           ),
         ],
       );
     }
 
+    final l10n = AppLocalizations.of(context);
     return Row(
       children: [
         Expanded(
           child: TextField(
             controller: _controller,
             textCapitalization: TextCapitalization.characters,
-            decoration: const InputDecoration(hintText: 'Coupon code'),
+            decoration: InputDecoration(hintText: l10n.couponCodeHint),
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
@@ -59,7 +64,7 @@ class _CouponInputState extends State<CouponInput> {
             if (_controller.text.trim().isEmpty) return;
             widget.onApply(_controller.text.trim());
           },
-          child: const Text('Apply'),
+          child: Text(l10n.apply),
         ),
       ],
     );

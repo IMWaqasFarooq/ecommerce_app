@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/error/failure_localization.dart';
+import '../../../../core/error/failures.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../providers/auth_controller_provider.dart';
 import '../widgets/auth_text_field.dart';
 
@@ -40,19 +43,21 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final controllerState = ref.watch(authControllerProvider);
     final isLoading = controllerState.isLoading;
 
     ref.listen(authControllerProvider, (previous, next) {
-      if (next.hasError && !next.isLoading) {
+      final error = next.error;
+      if (next.hasError && !next.isLoading && error is Failure) {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(next.error.toString())));
+          ..showSnackBar(SnackBar(content: Text(error.localizedMessage(context))));
       }
     });
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Create account')),
+      appBar: AppBar(title: Text(l10n.createAccount)),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -67,31 +72,31 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   children: [
                     AuthTextField(
                       controller: _nameController,
-                      label: 'Full name',
+                      label: l10n.fullNameLabel,
                       autofillHints: const [AutofillHints.name],
                       validator: (value) =>
-                          (value == null || value.trim().isEmpty) ? 'Enter your name' : null,
+                          (value == null || value.trim().isEmpty) ? l10n.enterYourName : null,
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     AuthTextField(
                       controller: _emailController,
-                      label: 'Email',
+                      label: l10n.emailLabel,
                       keyboardType: TextInputType.emailAddress,
                       autofillHints: const [AutofillHints.email],
                       validator: (value) {
-                        if (value == null || value.isEmpty) return 'Enter your email';
-                        if (!value.contains('@')) return 'Enter a valid email';
+                        if (value == null || value.isEmpty) return l10n.enterYourEmail;
+                        if (!value.contains('@')) return l10n.enterValidEmail;
                         return null;
                       },
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     AuthTextField(
                       controller: _passwordController,
-                      label: 'Password',
+                      label: l10n.passwordLabel,
                       obscureText: _obscurePassword,
                       autofillHints: const [AutofillHints.newPassword],
                       validator: (value) {
-                        if (value == null || value.length < 6) return 'At least 6 characters';
+                        if (value == null || value.length < 6) return l10n.atLeast6Characters;
                         return null;
                       },
                       suffixIcon: IconButton(
@@ -112,7 +117,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                               height: 20,
                               child: CircularProgressIndicator(strokeWidth: 2.5),
                             )
-                          : const Text('Create account'),
+                          : Text(l10n.createAccount),
                     ),
                   ],
                 ),

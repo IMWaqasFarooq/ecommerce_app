@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/exception_mapper.dart';
+import '../../../../core/error/failure_code.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
 import '../../domain/entities/product.dart';
@@ -48,7 +49,7 @@ class ProductRepositoryImpl implements ProductRepository {
     if (cached != null) {
       return Right((products: cached.map((p) => p.toEntity()).toList(), total: cached.length));
     }
-    return const Left(Failure.network(message: 'No internet connection and no cached data'));
+    return const Left(Failure.network(code: FailureCode.networkNoCachedData));
   }
 
   @override
@@ -67,7 +68,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
     final cached = await localDataSource.getCachedProductDetail(id);
     if (cached != null) return Right(cached.toEntity());
-    return const Left(Failure.network(message: 'No internet connection and no cached data'));
+    return const Left(Failure.network(code: FailureCode.networkNoCachedData));
   }
 
   @override
@@ -89,7 +90,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
     final cached = await localDataSource.getCachedProductsByCategory(category, sort: sort);
     if (cached != null) return Right(cached.map((p) => p.toEntity()).toList());
-    return const Left(Failure.network(message: 'No internet connection and no cached data'));
+    return const Left(Failure.network(code: FailureCode.networkNoCachedData));
   }
 
   @override

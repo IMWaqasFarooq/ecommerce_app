@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/entities/address.dart';
 
 Future<Address?> showAddressFormSheet(BuildContext context) {
@@ -53,6 +54,7 @@ class _AddressFormSheetState extends State<_AddressFormSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: EdgeInsets.only(
         left: AppSpacing.md,
@@ -66,17 +68,17 @@ class _AddressFormSheetState extends State<_AddressFormSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('New address', style: Theme.of(context).textTheme.titleMedium),
+              Text(l10n.newAddressTitle, style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: AppSpacing.md),
-              _field(_fullName, 'Full name'),
-              _field(_line1, 'Address line'),
-              _field(_city, 'City'),
-              _field(_state, 'State'),
-              _field(_postalCode, 'Postal code'),
-              _field(_country, 'Country'),
-              _field(_phone, 'Phone', keyboardType: TextInputType.phone),
+              _field(context, _fullName, l10n.fullNameLabel),
+              _field(context, _line1, l10n.addressLineLabel),
+              _field(context, _city, l10n.cityLabel),
+              _field(context, _state, l10n.stateLabel),
+              _field(context, _postalCode, l10n.postalCodeLabel),
+              _field(context, _country, l10n.countryLabel),
+              _field(context, _phone, l10n.phoneLabel, keyboardType: TextInputType.phone),
               const SizedBox(height: AppSpacing.md),
-              FilledButton(onPressed: _submit, child: const Text('Save address')),
+              FilledButton(onPressed: _submit, child: Text(l10n.saveAddress)),
             ],
           ),
         ),
@@ -84,14 +86,20 @@ class _AddressFormSheetState extends State<_AddressFormSheet> {
     );
   }
 
-  Widget _field(TextEditingController controller, String label, {TextInputType? keyboardType}) {
+  Widget _field(
+    BuildContext context,
+    TextEditingController controller,
+    String label, {
+    TextInputType? keyboardType,
+  }) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: TextFormField(
         controller: controller,
         keyboardType: keyboardType,
         decoration: InputDecoration(labelText: label),
-        validator: (value) => (value == null || value.trim().isEmpty) ? 'Required' : null,
+        validator: (value) => (value == null || value.trim().isEmpty) ? l10n.required : null,
       ),
     );
   }

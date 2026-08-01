@@ -5,4 +5,5 @@ abstract final class HiveBoxes {
   static const searchHistory = 'search_history_box';
   static const preferences = 'preferences_box';
   static const orders = 'orders_box';
+  static const translations = 'translations_box';
 }

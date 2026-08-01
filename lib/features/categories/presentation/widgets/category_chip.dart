@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/translation/translated_text.dart';
 
 class CategoryChip extends StatelessWidget {
-  const CategoryChip({required this.label, required this.selected, required this.onTap, super.key});
+  const CategoryChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    this.translate = true,
+    super.key,
+  });
 
   final String label;
   final bool selected;
   final VoidCallback onTap;
+  final bool translate;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +24,7 @@ class CategoryChip extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: AppSpacing.xs),
       child: ChoiceChip(
-        label: Text(label),
+        label: translate ? TranslatedText(label) : Text(label),
         selected: selected,
         onSelected: (_) => onTap(),
         selectedColor: colorScheme.primary,

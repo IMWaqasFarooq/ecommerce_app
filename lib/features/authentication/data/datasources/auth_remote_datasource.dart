@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb;
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../../core/error/exceptions.dart';
+import '../../../../core/error/failure_code.dart';
 import '../../domain/entities/app_user.dart';
 
 abstract class AuthRemoteDataSource {
@@ -50,18 +52,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final account = await _googleSignIn.authenticate();
       final idToken = account.authentication.idToken;
       if (idToken == null) {
-        throw const UnauthorizedException('Google sign-in did not return an identity token');
+        throw const UnauthorizedException(FailureCode.authGoogleFailed);
       }
       final credential = fb.GoogleAuthProvider.credential(idToken: idToken);
       final userCredential = await _firebaseAuth.signInWithCredential(credential);
       return AppUser.fromFirebaseUser(userCredential.user!);
     } on GoogleSignInException catch (e) {
       if (e.code == GoogleSignInExceptionCode.canceled) {
-        throw const UnauthorizedException('Sign-in cancelled');
+        throw const UnauthorizedException(FailureCode.authCancelled);
       }
-      throw UnauthorizedException('Google sign-in failed: ${e.description ?? e.code}');
+      debugPrint('Google sign-in failed: ${e.description ?? e.code}');
+      throw const UnauthorizedException(FailureCode.authGoogleFailed);
     } on fb.FirebaseAuthException catch (e) {
-      throw ServerException(_messageForFirebaseError(e));
+      throw ServerException(_codeForFirebaseError(e));
     }
   }
 
@@ -88,11 +91,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return AppUser.fromFirebaseUser(_firebaseAuth.currentUser!);
     } on SignInWithAppleAuthorizationException catch (e) {
       if (e.code == AuthorizationErrorCode.canceled) {
-        throw const UnauthorizedException('Sign-in cancelled');
+        throw const UnauthorizedException(FailureCode.authCancelled);
       }
-      throw UnauthorizedException('Apple sign-in failed: ${e.message}');
+      debugPrint('Apple sign-in failed: ${e.message}');
+      throw const UnauthorizedException(FailureCode.authAppleFailed);
     } on fb.FirebaseAuthException catch (e) {
-      throw ServerException(_messageForFirebaseError(e));
+      throw ServerException(_codeForFirebaseError(e));
     }
   }
 
@@ -105,7 +109,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
       return AppUser.fromFirebaseUser(userCredential.user!);
     } on fb.FirebaseAuthException catch (e) {
-      throw ServerException(_messageForFirebaseError(e));
+      throw ServerException(_codeForFirebaseError(e));
     }
   }
 
@@ -124,7 +128,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       await userCredential.user?.reload();
       return AppUser.fromFirebaseUser(_firebaseAuth.currentUser!);
     } on fb.FirebaseAuthException catch (e) {
-      throw ServerException(_messageForFirebaseError(e));
+      throw ServerException(_codeForFirebaseError(e));
     }
   }
 
@@ -133,7 +137,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on fb.FirebaseAuthException catch (e) {
-      throw ServerException(_messageForFirebaseError(e));
+      throw ServerException(_codeForFirebaseError(e));
     }
   }
 
@@ -146,7 +150,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       await user.reload();
       return AppUser.fromFirebaseUser(_firebaseAuth.currentUser!);
     } on fb.FirebaseAuthException catch (e) {
-      throw ServerException(_messageForFirebaseError(e));
+      throw ServerException(_codeForFirebaseError(e));
     }
   }
 
@@ -158,17 +162,21 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     ]);
   }
 
-  String _messageForFirebaseError(fb.FirebaseAuthException e) {
-    return switch (e.code) {
-      'user-not-found' => 'No account found for that email',
-      'wrong-password' || 'invalid-credential' => 'Incorrect email or password',
-      'email-already-in-use' => 'An account already exists for that email',
-      'weak-password' => 'Choose a stronger password',
-      'invalid-email' => 'Enter a valid email address',
-      'user-disabled' => 'This account has been disabled',
-      'too-many-requests' => 'Too many attempts, please try again later',
-      'network-request-failed' => 'Network error, check your connection',
-      _ => e.message ?? 'Authentication failed',
+  FailureCode _codeForFirebaseError(fb.FirebaseAuthException e) {
+    final code = switch (e.code) {
+      'user-not-found' => FailureCode.authUserNotFound,
+      'wrong-password' || 'invalid-credential' => FailureCode.authWrongPassword,
+      'email-already-in-use' => FailureCode.authEmailInUse,
+      'weak-password' => FailureCode.authWeakPassword,
+      'invalid-email' => FailureCode.authInvalidEmail,
+      'user-disabled' => FailureCode.authUserDisabled,
+      'too-many-requests' => FailureCode.authTooManyRequests,
+      'network-request-failed' => FailureCode.authNetworkRequestFailed,
+      _ => FailureCode.authGeneric,
     };
+    if (code == FailureCode.authGeneric) {
+      debugPrint('Unmapped Firebase auth error ${e.code}: ${e.message}');
+    }
+    return code;
   }
 }

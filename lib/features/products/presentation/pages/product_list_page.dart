@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/error/failure_localization.dart';
 import '../../../../core/router/route_paths.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../categories/presentation/providers/categories_provider.dart';
 import '../../../categories/presentation/widgets/category_chip.dart';
 import '../../domain/entities/product_filter.dart';
@@ -46,6 +48,7 @@ class _ProductListPageState extends ConsumerState<ProductListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = ref.watch(productListProvider);
     final categoriesAsync = ref.watch(categoriesProvider);
 
@@ -71,7 +74,8 @@ class _ProductListPageState extends ConsumerState<ProductListPage> {
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
                 children: [
                   CategoryChip(
-                    label: 'All',
+                    label: l10n.categoryAll,
+                    translate: false,
                     selected: state.selectedCategory == null,
                     onTap: () => ref.read(productListProvider.notifier).selectCategory(null),
                   ),
@@ -105,6 +109,7 @@ class _ProductListPageState extends ConsumerState<ProductListPage> {
   }
 
   Widget _buildBody(ProductListState state) {
+    final l10n = AppLocalizations.of(context);
     if (state.status == ProductListStatus.loading) {
       return const SkeletonProductGrid();
     }
@@ -114,11 +119,11 @@ class _ProductListPageState extends ConsumerState<ProductListPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(state.failure?.message ?? 'Something went wrong'),
+            Text(state.failure?.localizedMessage(context) ?? l10n.somethingWentWrong),
             const SizedBox(height: AppSpacing.sm),
             FilledButton(
               onPressed: () => ref.read(productListProvider.notifier).refresh(),
-              child: const Text('Retry'),
+              child: Text(l10n.retry),
             ),
           ],
         ),
@@ -132,12 +137,12 @@ class _ProductListPageState extends ConsumerState<ProductListPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('No products match your filters'),
+            Text(l10n.noProductsMatchFilters),
             const SizedBox(height: AppSpacing.sm),
             OutlinedButton(
               onPressed: () =>
                   ref.read(productListProvider.notifier).applyFilter(ProductFilter.empty),
-              child: const Text('Clear filters'),
+              child: Text(l10n.clearFilters),
             ),
           ],
         ),
@@ -145,7 +150,7 @@ class _ProductListPageState extends ConsumerState<ProductListPage> {
     }
 
     if (displayedProducts.isEmpty) {
-      return const Center(child: Text('No products found'));
+      return Center(child: Text(l10n.noProductsFound));
     }
 
     return RefreshIndicator(

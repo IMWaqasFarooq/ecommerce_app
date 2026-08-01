@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/error/failure_code.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/usecase/usecase.dart';
 import '../entities/app_user.dart';
@@ -13,14 +14,14 @@ class SignUpWithEmailPasswordUseCase implements UseCase<AppUser, SignUpParams> {
   @override
   Future<Either<Failure, AppUser>> call(SignUpParams params) {
     if (params.displayName.trim().isEmpty) {
-      return Future.value(const Left(Failure.validation(message: 'Enter your name')));
+      return Future.value(const Left(Failure.validation(code: FailureCode.validationNameRequired)));
     }
     if (params.email.trim().isEmpty || !params.email.contains('@')) {
-      return Future.value(const Left(Failure.validation(message: 'Enter a valid email address')));
+      return Future.value(const Left(Failure.validation(code: FailureCode.validationEmailInvalid)));
     }
     if (params.password.length < 6) {
       return Future.value(
-        const Left(Failure.validation(message: 'Password must be at least 6 characters')),
+        const Left(Failure.validation(code: FailureCode.validationPasswordTooShort)),
       );
     }
     return _repository.signUpWithEmailPassword(

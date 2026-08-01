@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/formatting/locale_formatting.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/translation/translated_text.dart';
 import '../../domain/entities/cart_item.dart';
 
 class CartItemTile extends StatelessWidget {
@@ -39,10 +41,10 @@ class CartItemTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.title, maxLines: 2, overflow: TextOverflow.ellipsis),
+                TranslatedText(item.title, maxLines: 2, overflow: TextOverflow.ellipsis),
                 const SizedBox(height: AppSpacing.xxs),
                 Text(
-                  '\$${item.price.toStringAsFixed(2)}',
+                  formatPrice(context, item.price),
                   style: Theme.of(
                     context,
                   ).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
@@ -57,7 +59,7 @@ class CartItemTile extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-                      child: Text('${item.quantity}'),
+                      child: Text(formatDecimal(context, item.quantity)),
                     ),
                     IconButton.outlined(
                       onPressed: onIncrement,

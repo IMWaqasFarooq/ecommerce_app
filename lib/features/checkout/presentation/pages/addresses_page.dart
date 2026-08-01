@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../providers/addresses_notifier.dart';
 import '../widgets/address_form_sheet.dart';
 
@@ -10,16 +11,17 @@ class AddressesPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final addressesAsync = ref.watch(addressesProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My addresses')),
+      appBar: AppBar(title: Text(l10n.myAddressesTitle)),
       body: addressesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => const Center(child: Text('Failed to load addresses')),
+        error: (error, stackTrace) => Center(child: Text(l10n.failedToLoadAddresses)),
         data: (addresses) {
           if (addresses.isEmpty) {
-            return const Center(child: Text('No saved addresses yet'));
+            return Center(child: Text(l10n.noSavedAddresses));
           }
 
           return ListView.separated(
@@ -50,7 +52,7 @@ class AddressesPage extends ConsumerWidget {
           }
         },
         icon: const Icon(Icons.add_rounded),
-        label: const Text('Add address'),
+        label: Text(l10n.addAddressButton),
       ),
     );
   }

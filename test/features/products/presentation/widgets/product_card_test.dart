@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:ecommerce_app/core/preferences/locale_notifier.dart';
 import 'package:ecommerce_app/core/usecase/usecase.dart';
 import 'package:ecommerce_app/features/products/domain/entities/product.dart';
 import 'package:ecommerce_app/features/products/domain/entities/product_review.dart';
@@ -7,6 +8,7 @@ import 'package:ecommerce_app/features/wishlist/domain/entities/wishlist_item.da
 import 'package:ecommerce_app/features/wishlist/domain/usecases/get_wishlist_usecase.dart';
 import 'package:ecommerce_app/features/wishlist/domain/usecases/toggle_wishlist_usecase.dart';
 import 'package:ecommerce_app/features/wishlist/presentation/providers/wishlist_providers.dart';
+import 'package:ecommerce_app/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,6 +17,11 @@ import 'package:mocktail/mocktail.dart';
 class _MockToggleWishlistUseCase extends Mock implements ToggleWishlistUseCase {}
 
 class _MockGetWishlistUseCase extends Mock implements GetWishlistUseCase {}
+
+class _TestLocaleNotifier extends LocaleNotifier {
+  @override
+  Locale build() => const Locale('en');
+}
 
 void main() {
   late _MockToggleWishlistUseCase toggleWishlist;
@@ -54,8 +61,11 @@ void main() {
       overrides: [
         getWishlistUseCaseProvider.overrideWithValue(getWishlist),
         toggleWishlistUseCaseProvider.overrideWithValue(toggleWishlist),
+        localeProvider.overrideWith(_TestLocaleNotifier.new),
       ],
       child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
           body: SizedBox(
             width: 200,

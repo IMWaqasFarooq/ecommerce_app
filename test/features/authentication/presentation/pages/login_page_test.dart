@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dartz/dartz.dart';
+import 'package:ecommerce_app/core/error/failure_code.dart';
 import 'package:ecommerce_app/core/error/failures.dart';
 import 'package:ecommerce_app/core/providers/core_providers.dart';
 import 'package:ecommerce_app/features/authentication/domain/entities/app_user.dart';
@@ -8,6 +9,7 @@ import 'package:ecommerce_app/features/authentication/domain/usecases/send_passw
 import 'package:ecommerce_app/features/authentication/domain/usecases/sign_in_with_email_password_usecase.dart';
 import 'package:ecommerce_app/features/authentication/presentation/pages/login_page.dart';
 import 'package:ecommerce_app/features/authentication/presentation/providers/auth_providers.dart';
+import 'package:ecommerce_app/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -38,7 +40,11 @@ void main() {
       sendPasswordResetEmailUseCaseProvider.overrideWithValue(resetUseCase),
       analyticsServiceProvider.overrideWithValue(FakeAnalyticsService()),
     ],
-    child: const MaterialApp(home: LoginPage()),
+    child: const MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: LoginPage(),
+    ),
   );
 
   testWidgets('renders the welcome copy and both credential fields', (tester) async {
@@ -99,7 +105,7 @@ void main() {
 
   testWidgets('shows a snackbar with the failure message on a failed login', (tester) async {
     when(() => signInUseCase(any())).thenAnswer(
-      (_) async => const Left(Failure.validation(message: 'Enter a valid email address')),
+      (_) async => const Left(Failure.validation(code: FailureCode.validationEmailInvalid)),
     );
 
     await tester.pumpWidget(wrap());

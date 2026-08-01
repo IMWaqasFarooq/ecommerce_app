@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../error/exceptions.dart';
+import '../../error/failure_code.dart';
 
 /// Normalizes Dio failures into our own Exception types.
 class ErrorInterceptor extends Interceptor {
@@ -16,37 +18,37 @@ class ErrorInterceptor extends Interceptor {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return const NetworkException('The request timed out');
+        return const NetworkException(FailureCode.networkTimeout);
       case DioExceptionType.connectionError:
         return const NetworkException();
       case DioExceptionType.badCertificate:
-        return const NetworkException('Insecure connection rejected');
+        return const NetworkException(FailureCode.networkInsecureConnection);
       case DioExceptionType.cancel:
-        return const ServerException('Request cancelled');
+        return const ServerException(FailureCode.requestCancelled);
       case DioExceptionType.badResponse:
         return _mapBadResponse(err);
       case DioExceptionType.unknown:
         if (err.error is SocketException) return const NetworkException();
-        return ServerException(err.message ?? 'Unknown network error');
+        return ServerException(FailureCode.server, debugMessage: err.message);
       default:
-        return ServerException(err.message ?? 'Unknown network error');
+        return ServerException(FailureCode.server, debugMessage: err.message);
     }
   }
 
   Exception _mapBadResponse(DioException err) {
     final statusCode = err.response?.statusCode;
-    final message = _extractMessage(err.response?.data) ?? 'Server error ($statusCode)';
+    debugPrint('Bad response ($statusCode): ${_extractMessage(err.response?.data)}');
 
     if (statusCode == 401 || statusCode == 403) {
-      return UnauthorizedException(message);
+      return const UnauthorizedException();
     }
     if (statusCode == 429) {
-      return const ServerException('Rate limit exceeded, please slow down', statusCode: 429);
+      return const ServerException(FailureCode.rateLimitExceeded, statusCode: 429);
     }
     if (statusCode != null && statusCode >= 500) {
-      return ServerException('Server is currently unavailable', statusCode: statusCode);
+      return ServerException(FailureCode.serverUnavailable, statusCode: statusCode);
     }
-    return ServerException(message, statusCode: statusCode);
+    return ServerException(FailureCode.server, statusCode: statusCode);
   }
 
   String? _extractMessage(dynamic data) {

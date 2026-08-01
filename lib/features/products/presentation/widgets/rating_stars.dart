@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/formatting/locale_formatting.dart';
+
 class RatingStars extends StatelessWidget {
   const RatingStars({required this.rating, this.size = 16, super.key});
 
@@ -13,7 +15,10 @@ class RatingStars extends StatelessWidget {
       children: [
         Icon(Icons.star_rounded, size: size, color: Colors.amber),
         SizedBox(width: size * 0.25),
-        Text(rating.toStringAsFixed(1), style: Theme.of(context).textTheme.bodySmall),
+        Text(
+          formatDecimal(context, rating, decimalDigits: 1),
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
       ],
     );
   }

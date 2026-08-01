@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/cart/presentation/providers/cart_notifier.dart';
 import '../../features/wishlist/presentation/providers/wishlist_notifier.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class MainShell extends ConsumerWidget {
   const MainShell({required this.navigationShell, super.key});
@@ -12,6 +13,7 @@ class MainShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final cartCount = ref.watch(cartProvider).value?.itemCount ?? 0;
     final wishlistCount = ref.watch(wishlistProvider).value?.length ?? 0;
 
@@ -22,25 +24,25 @@ class MainShell extends ConsumerWidget {
         onDestinationSelected: (index) =>
             navigationShell.goBranch(index, initialLocation: index == navigationShell.currentIndex),
         destinations: [
-          const NavigationDestination(
-            icon: Icon(Icons.storefront_outlined),
-            selectedIcon: Icon(Icons.storefront_rounded),
-            label: 'Shop',
+          NavigationDestination(
+            icon: const Icon(Icons.storefront_outlined),
+            selectedIcon: const Icon(Icons.storefront_rounded),
+            label: l10n.navShop,
           ),
           NavigationDestination(
             icon: _BadgedIcon(count: wishlistCount, icon: Icons.favorite_outline_rounded),
             selectedIcon: _BadgedIcon(count: wishlistCount, icon: Icons.favorite_rounded),
-            label: 'Wishlist',
+            label: l10n.wishlist,
           ),
           NavigationDestination(
             icon: _BadgedIcon(count: cartCount, icon: Icons.shopping_bag_outlined),
             selectedIcon: _BadgedIcon(count: cartCount, icon: Icons.shopping_bag_rounded),
-            label: 'Cart',
+            label: l10n.cartTitle,
           ),
-          const NavigationDestination(
-            icon: Icon(Icons.person_outline_rounded),
-            selectedIcon: Icon(Icons.person_rounded),
-            label: 'Profile',
+          NavigationDestination(
+            icon: const Icon(Icons.person_outline_rounded),
+            selectedIcon: const Icon(Icons.person_rounded),
+            label: l10n.profileTitle,
           ),
         ],
       ),

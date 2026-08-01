@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/entities/order_status.dart';
+import '../utils/order_status_l10n.dart';
 
 const _trackingSteps = [OrderStatus.processing, OrderStatus.shipped, OrderStatus.delivered];
 
@@ -17,7 +19,7 @@ class OrderTrackingStepper extends StatelessWidget {
         children: [
           Icon(Icons.cancel_rounded, color: Theme.of(context).colorScheme.error),
           const SizedBox(width: AppSpacing.sm),
-          const Text('This order was cancelled'),
+          Text(AppLocalizations.of(context).orderCancelledMessage),
         ],
       );
     }
@@ -42,7 +44,10 @@ class OrderTrackingStepper extends StatelessWidget {
                 color: i <= currentIndex ? scheme.primary : scheme.outlineVariant,
               ),
               const SizedBox(height: AppSpacing.xxs),
-              Text(_trackingSteps[i].name, style: Theme.of(context).textTheme.labelSmall),
+              Text(
+                _trackingSteps[i].localizedLabel(context),
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
             ],
           ),
         ],

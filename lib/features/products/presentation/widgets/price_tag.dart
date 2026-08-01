@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/formatting/locale_formatting.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../domain/entities/product.dart';
@@ -17,16 +18,16 @@ class PriceTag extends StatelessWidget {
         : AppTextStyles.priceMedium(context);
 
     if (!product.hasDiscount) {
-      return Text('\$${product.price.toStringAsFixed(2)}', style: priceStyle);
+      return Text(formatPrice(context, product.price), style: priceStyle);
     }
 
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       spacing: 8,
       children: [
-        Text('\$${product.discountedPrice.toStringAsFixed(2)}', style: priceStyle),
+        Text(formatPrice(context, product.discountedPrice), style: priceStyle),
         Text(
-          '\$${product.price.toStringAsFixed(2)}',
+          formatPrice(context, product.price),
           style: AppTextStyles.priceStrikethrough(context),
         ),
         if (large)
@@ -37,7 +38,7 @@ class PriceTag extends StatelessWidget {
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
-              '-${product.discountPercentage.round()}%',
+              '-${formatDecimal(context, product.discountPercentage.round())}%',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 12,

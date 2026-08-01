@@ -14,7 +14,7 @@ void main() {
     shippingCost: 4.99,
     total: 14.98,
     shippingAddressText: '123 Main St',
-    shippingMethodLabel: 'Standard shipping',
+    shippingMethodId: 'standard',
     status: OrderStatus.processing,
     createdAt: DateTime(2026, 1, 1),
   );

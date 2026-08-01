@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart' hide Order;
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../../core/error/failure_code.dart';
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/order.dart';
 import '../../domain/entities/order_status.dart';
@@ -29,7 +30,7 @@ class OrderRepositoryImpl implements OrderRepository {
         .getOrders(_ownerKey)
         .map((m) => m.toEntity())
         .where((o) => o.id == id);
-    if (matches.isEmpty) return const Left(Failure.unknown(message: 'Order not found'));
+    if (matches.isEmpty) return const Left(Failure.unknown(code: FailureCode.orderNotFound));
     return Right(matches.first);
   }
 
@@ -46,11 +47,11 @@ class OrderRepositoryImpl implements OrderRepository {
     final ownerKey = _ownerKey;
     final orders = localDataSource.getOrders(ownerKey);
     final index = orders.indexWhere((o) => o.id == id);
-    if (index == -1) return const Left(Failure.unknown(message: 'Order not found'));
+    if (index == -1) return const Left(Failure.unknown(code: FailureCode.orderNotFound));
 
     final current = orders[index].toEntity();
     if (!current.isCancellable) {
-      return const Left(Failure.validation(message: 'Only processing orders can be cancelled'));
+      return const Left(Failure.validation(code: FailureCode.validationOrderNotCancellable));
     }
 
     final cancelled = current.copyWith(status: OrderStatus.cancelled);

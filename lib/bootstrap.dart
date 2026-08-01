@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'app.dart';
 import 'core/config/env_config.dart';
@@ -35,6 +36,9 @@ Future<void> bootstrap(Flavor flavor) async {
       final env = EnvConfig(flavor);
       await env.load();
 
+      await initializeDateFormatting('en');
+      await initializeDateFormatting('ar');
+
       Stripe.publishableKey = env.stripePublishableKey;
       await Stripe.instance.applySettings();
 
@@ -50,6 +54,7 @@ Future<void> bootstrap(Flavor flavor) async {
           HiveBoxes.searchHistory,
           HiveBoxes.preferences,
           HiveBoxes.orders,
+          HiveBoxes.translations,
         ])
           name: await Hive.openBox<dynamic>(name),
       };

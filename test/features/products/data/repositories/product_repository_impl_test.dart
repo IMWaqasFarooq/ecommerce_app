@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:ecommerce_app/core/error/exceptions.dart';
+import 'package:ecommerce_app/core/error/failure_code.dart';
 import 'package:ecommerce_app/core/error/failures.dart';
 import 'package:ecommerce_app/core/network/network_info.dart';
 import 'package:ecommerce_app/features/products/data/datasources/product_local_datasource.dart';
@@ -55,7 +56,9 @@ void main() {
 
     test('falls back to cache when the remote call throws and cache has data', () async {
       when(() => networkInfo.isConnected).thenAnswer((_) async => true);
-      when(() => remoteDataSource.getProductDetail(1)).thenThrow(const ServerException('boom'));
+      when(
+        () => remoteDataSource.getProductDetail(1),
+      ).thenThrow(const ServerException(FailureCode.server));
       when(() => localDataSource.getCachedProductDetail(1)).thenAnswer((_) async => productModel);
 
       final result = await repository.getProductDetail(1);
@@ -72,7 +75,7 @@ void main() {
       expect(
         result,
         const Left<Failure, dynamic>(
-          Failure.network(message: 'No internet connection and no cached data'),
+          Failure.network(code: FailureCode.networkNoCachedData),
         ),
       );
     });

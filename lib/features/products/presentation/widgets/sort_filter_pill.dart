@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
+
 class SortFilterPill extends StatelessWidget {
   const SortFilterPill({
     required this.filterActive,
@@ -14,6 +16,7 @@ class SortFilterPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
 
     return Material(
@@ -25,7 +28,7 @@ class SortFilterPill extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           _PillButton(
-            label: 'Sort',
+            label: l10n.sortLabel,
             icon: Icons.swap_vert_rounded,
             color: scheme.onPrimary,
             borderRadius: const BorderRadius.horizontal(left: Radius.circular(999)),
@@ -33,7 +36,7 @@ class SortFilterPill extends StatelessWidget {
           ),
           Container(width: 1, height: 24, color: scheme.onPrimary.withValues(alpha: 0.3)),
           _PillButton(
-            label: 'Filter',
+            label: l10n.filterLabel,
             icon: Icons.tune_rounded,
             color: scheme.onPrimary,
             borderRadius: const BorderRadius.horizontal(right: Radius.circular(999)),

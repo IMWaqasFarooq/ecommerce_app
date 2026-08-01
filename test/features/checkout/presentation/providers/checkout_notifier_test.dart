@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart' hide Order;
+import 'package:ecommerce_app/core/error/failure_code.dart';
 import 'package:ecommerce_app/core/error/failures.dart';
 import 'package:ecommerce_app/core/providers/core_providers.dart';
 import 'package:ecommerce_app/features/cart/domain/entities/cart.dart';
@@ -69,7 +70,7 @@ void main() {
         shippingCost: 0,
         total: 0,
         shippingAddressText: '',
-        shippingMethodLabel: '',
+        shippingMethodId: '',
         status: OrderStatus.processing,
         createdAt: DateTime(2026),
       ),
@@ -156,7 +157,7 @@ void main() {
         amountInSmallestUnit: any(named: 'amountInSmallestUnit'),
         currency: 'usd',
       ),
-    ).thenAnswer((_) async => const Left(Failure.payment(message: 'Your card was declined')));
+    ).thenAnswer((_) async => const Left(Failure.payment(code: FailureCode.paymentFailed)));
 
     container.listen(checkoutProvider, (previous, next) {});
     await container.read(checkoutProvider.future);
@@ -168,7 +169,7 @@ void main() {
     await notifier.placeOrder();
 
     final state = container.read(checkoutProvider).value!;
-    expect(state.failure, const Failure.payment(message: 'Your card was declined'));
+    expect(state.failure, const Failure.payment(code: FailureCode.paymentFailed));
     expect(state.completedOrder, isNull);
     verifyNever(() => orderRepository.createOrder(any()));
     verifyNever(() => cartRepository.clearCart());

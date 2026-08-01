@@ -41,6 +41,7 @@ void main() {
         HiveBoxes.searchHistory,
         HiveBoxes.preferences,
         HiveBoxes.orders,
+        HiveBoxes.translations,
       ])
         name: await Hive.openBox<dynamic>(name),
     };

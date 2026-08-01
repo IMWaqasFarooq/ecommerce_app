@@ -1,9 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
+import '../../../../core/error/failure_localization.dart';
+import '../../../../core/formatting/locale_formatting.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/translation/translated_text.dart';
+import '../../../../l10n/generated/app_localizations.dart';
+import '../../../checkout/presentation/utils/shipping_method_l10n.dart';
 import '../../domain/entities/order.dart';
 import '../providers/order_detail_provider.dart';
 import '../providers/orders_notifier.dart';
@@ -17,13 +21,14 @@ class OrderDetailPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final orderAsync = ref.watch(orderDetailProvider(orderId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Order details')),
+      appBar: AppBar(title: Text(l10n.orderDetailsTitle)),
       body: orderAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => const Center(child: Text('Order not found')),
+        error: (error, stackTrace) => Center(child: Text(l10n.orderNotFound)),
         data: (order) => _OrderDetailContent(order: order),
       ),
     );
@@ -37,6 +42,7 @@ class _OrderDetailContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.md),
       children: [
@@ -44,7 +50,7 @@ class _OrderDetailContent extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Order #${order.id.substring(0, 8).toUpperCase()}',
+              l10n.orderNumberLabel(order.id.substring(0, 8).toUpperCase()),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             OrderStatusBadge(status: order.status),
@@ -52,13 +58,13 @@ class _OrderDetailContent extends ConsumerWidget {
         ),
         const SizedBox(height: AppSpacing.xxs),
         Text(
-          DateFormat.yMMMd().add_jm().format(order.createdAt),
+          formatDateTime(context, order.createdAt),
           style: Theme.of(context).textTheme.bodySmall,
         ),
         const SizedBox(height: AppSpacing.lg),
         OrderTrackingStepper(status: order.status),
         const SizedBox(height: AppSpacing.lg),
-        Text('Items', style: Theme.of(context).textTheme.titleSmall),
+        Text(l10n.itemsSectionTitle, style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: AppSpacing.sm),
         for (final item in order.items)
           Padding(
@@ -75,18 +81,31 @@ class _OrderDetailContent extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
-                Expanded(child: Text('${item.title} × ${item.quantity}')),
-                Text('\$${item.lineTotal.toStringAsFixed(2)}'),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: TranslatedText(item.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+                      ),
+                      Text(' × ${formatDecimal(context, item.quantity)}'),
+                    ],
+                  ),
+                ),
+                Text(formatPrice(context, item.lineTotal)),
               ],
             ),
           ),
         const Divider(height: AppSpacing.lg),
-        _row(context, 'Subtotal', order.subtotal),
-        if (order.discount > 0) _row(context, 'Discount', -order.discount),
-        _row(context, 'Shipping (${order.shippingMethodLabel})', order.shippingCost),
-        _row(context, 'Total', order.total, emphasize: true),
+        _row(context, l10n.subtotalLabel, order.subtotal),
+        if (order.discount > 0) _row(context, l10n.discountLabel, -order.discount),
+        _row(
+          context,
+          l10n.shippingWithMethod(localizedShippingMethodLabel(context, order.shippingMethodId)),
+          order.shippingCost,
+        ),
+        _row(context, l10n.totalLabel, order.total, emphasize: true),
         const SizedBox(height: AppSpacing.lg),
-        Text('Shipping address', style: Theme.of(context).textTheme.titleSmall),
+        Text(l10n.shippingAddressSectionTitle, style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: AppSpacing.xs),
         Text(order.shippingAddressText),
         if (order.isCancellable) ...[
@@ -98,10 +117,10 @@ class _OrderDetailContent extends ConsumerWidget {
               if (failure != null && context.mounted) {
                 ScaffoldMessenger.of(context)
                   ..hideCurrentSnackBar()
-                  ..showSnackBar(SnackBar(content: Text(failure.message)));
+                  ..showSnackBar(SnackBar(content: Text(failure.localizedMessage(context))));
               }
             },
-            child: const Text('Cancel order'),
+            child: Text(l10n.cancelOrder),
           ),
         ],
       ],
@@ -118,7 +137,7 @@ class _OrderDetailContent extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: style),
-          Text('\$${value.toStringAsFixed(2)}', style: style),
+          Text(formatPrice(context, value), style: style),
         ],
       ),
     );
