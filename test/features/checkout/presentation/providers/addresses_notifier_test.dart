@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:ecommerce_app/features/checkout/domain/entities/address.dart';
+import 'package:ecommerce_app/features/checkout/domain/entities/address_type.dart';
 import 'package:ecommerce_app/features/checkout/domain/repositories/address_repository.dart';
 import 'package:ecommerce_app/features/checkout/presentation/providers/address_providers.dart';
 import 'package:ecommerce_app/features/checkout/presentation/providers/addresses_notifier.dart';
@@ -14,12 +15,13 @@ void main() {
   late ProviderContainer container;
 
   const address = Address(
+    id: 'addr-1',
+    type: AddressType.home,
+    streetArea: '23 Street, Al Warqa 1',
+    latitude: 25.2048,
+    longitude: 55.2708,
+    apartmentOrVilla: 'Apt 4B',
     fullName: 'Jane Doe',
-    line1: '123 Main St',
-    city: 'Springfield',
-    state: 'IL',
-    postalCode: '62704',
-    country: 'USA',
     phone: '555-0100',
   );
 

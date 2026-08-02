@@ -7,6 +7,8 @@ import '../../features/authentication/presentation/pages/signup_page.dart';
 import '../../features/authentication/presentation/pages/splash_page.dart';
 import '../../features/authentication/presentation/providers/auth_state_provider.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
+import '../../features/checkout/presentation/pages/address_details_page.dart';
+import '../../features/checkout/presentation/pages/address_map_picker_page.dart';
 import '../../features/checkout/presentation/pages/addresses_page.dart';
 import '../../features/checkout/presentation/pages/checkout_page.dart';
 import '../../features/checkout/presentation/pages/order_confirmation_page.dart';
@@ -103,6 +105,17 @@ GoRouter router(Ref ref) {
         path: RoutePaths.addresses,
         name: RouteNames.addresses,
         builder: (context, state) => const AddressesPage(),
+      ),
+      GoRoute(
+        path: RoutePaths.addressMapPicker,
+        name: RouteNames.addressMapPicker,
+        builder: (context, state) => const AddressMapPickerPage(),
+      ),
+      GoRoute(
+        path: RoutePaths.addressDetails,
+        name: RouteNames.addressDetails,
+        builder: (context, state) =>
+            AddressDetailsPage(picked: state.extra! as PickedLocation),
       ),
       GoRoute(
         path: RoutePaths.about,

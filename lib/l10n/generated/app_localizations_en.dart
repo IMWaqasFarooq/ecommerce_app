@@ -299,24 +299,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get newAddressTitle => 'New address';
-
-  @override
-  String get addressLineLabel => 'Address line';
-
-  @override
-  String get cityLabel => 'City';
-
-  @override
-  String get stateLabel => 'State';
-
-  @override
-  String get postalCodeLabel => 'Postal code';
-
-  @override
-  String get countryLabel => 'Country';
-
-  @override
   String get phoneLabel => 'Phone';
 
   @override
@@ -330,6 +312,86 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addAddressButton => 'Add address';
+
+  @override
+  String get addressTypeHome => 'Home';
+
+  @override
+  String get addressTypeWork => 'Work';
+
+  @override
+  String get addressTypeOther => 'Other';
+
+  @override
+  String get searchAddressHint => 'Search for your building, area...';
+
+  @override
+  String get currentLocationAction => 'Current location';
+
+  @override
+  String get deliveredHereLabel => 'Your order will be delivered here';
+
+  @override
+  String pinDistanceWarning(String distance) {
+    return 'Pin is $distance away from your current location';
+  }
+
+  @override
+  String get addAddressDetailsAction => 'Add address details';
+
+  @override
+  String get addressDetailsTitle => 'Address Details';
+
+  @override
+  String get editAction => 'Edit';
+
+  @override
+  String get addAddressMethodTitle => 'Add address';
+
+  @override
+  String get chooseFromMapAction => 'Choose from map';
+
+  @override
+  String get enterManuallyAction => 'Enter manually';
+
+  @override
+  String get streetAreaLabel => 'Street / Area';
+
+  @override
+  String get apartmentVillaLabel => 'Apt & Floor No. / Villa No.';
+
+  @override
+  String get buildingClusterLabel => 'Building / Cluster name';
+
+  @override
+  String get directionsOptionalLabel => 'Directions to reach (Optional)';
+
+  @override
+  String get nicknameOptionalLabel => 'Address nickname (Optional)';
+
+  @override
+  String get receiverDetailsLabel => 'Receiver details for this address';
+
+  @override
+  String distanceMeters(String value) {
+    return '$value m';
+  }
+
+  @override
+  String distanceKilometers(String value) {
+    return '$value km';
+  }
+
+  @override
+  String get mapNotConfiguredTitle => 'Map picker not configured';
+
+  @override
+  String get mapNotConfiguredMessage =>
+      'Add a Google Maps API key to enable picking a delivery address on the map.';
+
+  @override
+  String get locationUnavailableMessage =>
+      'Couldn\'t get your current location';
 
   @override
   String get shippingStandard => 'Standard shipping';

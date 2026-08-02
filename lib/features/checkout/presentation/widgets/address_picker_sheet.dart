@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/router/route_paths.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/entities/address.dart';
-import 'address_form_sheet.dart';
+import '../pages/address_map_picker_page.dart';
+import '../utils/address_type_l10n.dart';
+import 'add_address_method_sheet.dart';
 
 typedef AddressPickerResult = ({Address address, bool isNew});
 
@@ -46,17 +50,24 @@ class _AddressPickerSheet extends StatelessWidget {
             ),
             for (final address in addresses)
               ListTile(
-                leading: const Icon(Icons.location_on_outlined),
-                title: Text(address.fullName),
+                leading: Icon(address.type.icon),
+                title: Text(address.type.localizedLabel(context)),
                 subtitle: Text(address.formatted),
-                trailing: address == selected ? const Icon(Icons.check_rounded) : null,
+                trailing: address.id == selected?.id ? const Icon(Icons.check_rounded) : null,
                 onTap: () => Navigator.of(context).pop((address: address, isNew: false)),
               ),
             ListTile(
               leading: const Icon(Icons.add_rounded),
               title: Text(l10n.addNewAddress),
               onTap: () async {
-                final address = await showAddressFormSheet(context);
+                final method = await showAddAddressMethodSheet(context);
+                if (method == null || !context.mounted) return;
+                final address = method == AddAddressMethod.map
+                    ? await context.push<Address>(RoutePaths.addressMapPicker)
+                    : await context.push<Address>(
+                        RoutePaths.addressDetails,
+                        extra: const PickedLocation(streetArea: ''),
+                      );
                 if (address != null && context.mounted) {
                   Navigator.of(context).pop((address: address, isNew: true));
                 }

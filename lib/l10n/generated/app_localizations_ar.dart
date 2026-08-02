@@ -307,24 +307,6 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get newAddressTitle => 'عنوان جديد';
-
-  @override
-  String get addressLineLabel => 'العنوان';
-
-  @override
-  String get cityLabel => 'المدينة';
-
-  @override
-  String get stateLabel => 'المحافظة';
-
-  @override
-  String get postalCodeLabel => 'الرمز البريدي';
-
-  @override
-  String get countryLabel => 'الدولة';
-
-  @override
   String get phoneLabel => 'رقم الهاتف';
 
   @override
@@ -338,6 +320,85 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get addAddressButton => 'إضافة عنوان';
+
+  @override
+  String get addressTypeHome => 'المنزل';
+
+  @override
+  String get addressTypeWork => 'العمل';
+
+  @override
+  String get addressTypeOther => 'أخرى';
+
+  @override
+  String get searchAddressHint => 'ابحث عن مبناك أو منطقتك...';
+
+  @override
+  String get currentLocationAction => 'الموقع الحالي';
+
+  @override
+  String get deliveredHereLabel => 'سيتم توصيل طلبك هنا';
+
+  @override
+  String pinDistanceWarning(String distance) {
+    return 'الدبوس يبعد $distance عن موقعك الحالي';
+  }
+
+  @override
+  String get addAddressDetailsAction => 'إضافة تفاصيل العنوان';
+
+  @override
+  String get addressDetailsTitle => 'تفاصيل العنوان';
+
+  @override
+  String get editAction => 'تعديل';
+
+  @override
+  String get addAddressMethodTitle => 'إضافة عنوان';
+
+  @override
+  String get chooseFromMapAction => 'الاختيار من الخريطة';
+
+  @override
+  String get enterManuallyAction => 'الإدخال يدويًا';
+
+  @override
+  String get streetAreaLabel => 'الشارع / المنطقة';
+
+  @override
+  String get apartmentVillaLabel => 'رقم الشقة والطابق / رقم الفيلا';
+
+  @override
+  String get buildingClusterLabel => 'اسم المبنى / المجمع';
+
+  @override
+  String get directionsOptionalLabel => 'اتجاهات الوصول (اختياري)';
+
+  @override
+  String get nicknameOptionalLabel => 'اسم مستعار للعنوان (اختياري)';
+
+  @override
+  String get receiverDetailsLabel => 'بيانات المستلم لهذا العنوان';
+
+  @override
+  String distanceMeters(String value) {
+    return '$value م';
+  }
+
+  @override
+  String distanceKilometers(String value) {
+    return '$value كم';
+  }
+
+  @override
+  String get mapNotConfiguredTitle => 'أداة اختيار الخريطة غير مُهيأة';
+
+  @override
+  String get mapNotConfiguredMessage =>
+      'أضف مفتاح Google Maps API لتفعيل اختيار عنوان التوصيل من الخريطة.';
+
+  @override
+  String get locationUnavailableMessage => 'تعذر الحصول على موقعك الحالي';
 
   @override
   String get shippingStandard => 'شحن عادي';

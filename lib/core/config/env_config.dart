@@ -15,6 +15,10 @@ class EnvConfig {
 
   String get paymentsFunctionUrl => _read('PAYMENTS_FUNCTION_URL');
 
+  // Optional: the map picker degrades to a friendly "not configured" state
+  // instead of crashing the whole app when this hasn't been provisioned yet.
+  String get googleMapsApiKey => dotenv.maybeGet('GOOGLE_MAPS_API_KEY') ?? '';
+
   int get maxRetries => _readInt('NETWORK_MAX_RETRIES', fallback: 3);
 
   Duration get retryBaseDelay =>

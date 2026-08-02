@@ -13,6 +13,8 @@ abstract final class RoutePaths {
   static const orderDetail = '/orders/:orderId';
   static const profile = '/profile';
   static const addresses = '/profile/addresses';
+  static const addressMapPicker = '/profile/addresses/map-picker';
+  static const addressDetails = '/profile/addresses/details';
   static const about = '/profile/about';
 
   static String productDetailPath(String productId) => '/product/$productId';
@@ -35,5 +37,7 @@ abstract final class RouteNames {
   static const orderDetail = 'orderDetail';
   static const profile = 'profile';
   static const addresses = 'addresses';
+  static const addressMapPicker = 'addressMapPicker';
+  static const addressDetails = 'addressDetails';
   static const about = 'about';
 }

@@ -67,6 +67,9 @@ dependencies:
   sign_in_with_apple: ^8.1.0
   flutter_stripe: ^13.1.0
   translator: ^1.0.4+1
+  google_maps_flutter: ^2.13.0
+  geolocator: ^14.0.2
+  geocoding: ^4.0.0
 
 dev_dependencies:
   flutter_test:

@@ -16,6 +16,7 @@ import '../../domain/entities/payment_method.dart';
 import '../../domain/entities/shipping_method.dart';
 import '../providers/checkout_notifier.dart';
 import '../providers/checkout_state.dart';
+import '../utils/address_type_l10n.dart';
 import '../utils/payment_method_l10n.dart';
 import '../utils/shipping_method_l10n.dart';
 import '../widgets/address_picker_sheet.dart';
@@ -149,16 +150,22 @@ class _AddressCard extends ConsumerWidget {
           if (address == null)
             Text(l10n.noSavedAddresses)
           else ...[
-            Text(
-              address.fullName,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
+            Row(
+              children: [
+                Icon(address.type.icon, size: 16),
+                const SizedBox(width: AppSpacing.xxs),
+                Text(
+                  address.type.localizedLabel(context),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w600),
+                ),
+              ],
             ),
             const SizedBox(height: AppSpacing.xxs),
             Text(address.formatted, style: AppTextStyles.caption(context)),
             const SizedBox(height: AppSpacing.xxs),
-            Text(address.phone, style: AppTextStyles.caption(context)),
+            Text('${address.fullName}, ${address.phone}', style: AppTextStyles.caption(context)),
           ],
         ],
       ),

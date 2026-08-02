@@ -8,6 +8,7 @@ import 'package:ecommerce_app/features/cart/domain/repositories/cart_repository.
 import 'package:ecommerce_app/features/cart/presentation/providers/cart_notifier.dart';
 import 'package:ecommerce_app/features/cart/presentation/providers/cart_providers.dart';
 import 'package:ecommerce_app/features/checkout/domain/entities/address.dart';
+import 'package:ecommerce_app/features/checkout/domain/entities/address_type.dart';
 import 'package:ecommerce_app/features/checkout/domain/entities/payment_method.dart';
 import 'package:ecommerce_app/features/checkout/domain/entities/shipping_method.dart';
 import 'package:ecommerce_app/features/checkout/domain/repositories/address_repository.dart';
@@ -41,12 +42,13 @@ void main() {
   late ProviderContainer container;
 
   const address = Address(
+    id: 'addr-1',
+    type: AddressType.home,
+    streetArea: '23 Street, Al Warqa 1',
+    latitude: 25.2048,
+    longitude: 55.2708,
+    apartmentOrVilla: 'Apt 4B',
     fullName: 'Jane Doe',
-    line1: '123 Main St',
-    city: 'Springfield',
-    state: 'IL',
-    postalCode: '62704',
-    country: 'USA',
     phone: '555-0100',
   );
 

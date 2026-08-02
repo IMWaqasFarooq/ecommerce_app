@@ -596,42 +596,6 @@ abstract class AppLocalizations {
   /// **'{count, plural, one{{count} item} other{{count} items}}'**
   String itemsCount(int count);
 
-  /// No description provided for @newAddressTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'New address'**
-  String get newAddressTitle;
-
-  /// No description provided for @addressLineLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Address line'**
-  String get addressLineLabel;
-
-  /// No description provided for @cityLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'City'**
-  String get cityLabel;
-
-  /// No description provided for @stateLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'State'**
-  String get stateLabel;
-
-  /// No description provided for @postalCodeLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Postal code'**
-  String get postalCodeLabel;
-
-  /// No description provided for @countryLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Country'**
-  String get countryLabel;
-
   /// No description provided for @phoneLabel.
   ///
   /// In en, this message translates to:
@@ -661,6 +625,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add address'**
   String get addAddressButton;
+
+  /// No description provided for @addressTypeHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get addressTypeHome;
+
+  /// No description provided for @addressTypeWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get addressTypeWork;
+
+  /// No description provided for @addressTypeOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get addressTypeOther;
+
+  /// No description provided for @searchAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for your building, area...'**
+  String get searchAddressHint;
+
+  /// No description provided for @currentLocationAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Current location'**
+  String get currentLocationAction;
+
+  /// No description provided for @deliveredHereLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order will be delivered here'**
+  String get deliveredHereLabel;
+
+  /// No description provided for @pinDistanceWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin is {distance} away from your current location'**
+  String pinDistanceWarning(String distance);
+
+  /// No description provided for @addAddressDetailsAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add address details'**
+  String get addAddressDetailsAction;
+
+  /// No description provided for @addressDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Address Details'**
+  String get addressDetailsTitle;
+
+  /// No description provided for @editAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editAction;
+
+  /// No description provided for @addAddressMethodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add address'**
+  String get addAddressMethodTitle;
+
+  /// No description provided for @chooseFromMapAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from map'**
+  String get chooseFromMapAction;
+
+  /// No description provided for @enterManuallyAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter manually'**
+  String get enterManuallyAction;
+
+  /// No description provided for @streetAreaLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Street / Area'**
+  String get streetAreaLabel;
+
+  /// No description provided for @apartmentVillaLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Apt & Floor No. / Villa No.'**
+  String get apartmentVillaLabel;
+
+  /// No description provided for @buildingClusterLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Building / Cluster name'**
+  String get buildingClusterLabel;
+
+  /// No description provided for @directionsOptionalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Directions to reach (Optional)'**
+  String get directionsOptionalLabel;
+
+  /// No description provided for @nicknameOptionalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Address nickname (Optional)'**
+  String get nicknameOptionalLabel;
+
+  /// No description provided for @receiverDetailsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Receiver details for this address'**
+  String get receiverDetailsLabel;
+
+  /// No description provided for @distanceMeters.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} m'**
+  String distanceMeters(String value);
+
+  /// No description provided for @distanceKilometers.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} km'**
+  String distanceKilometers(String value);
+
+  /// No description provided for @mapNotConfiguredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Map picker not configured'**
+  String get mapNotConfiguredTitle;
+
+  /// No description provided for @mapNotConfiguredMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a Google Maps API key to enable picking a delivery address on the map.'**
+  String get mapNotConfiguredMessage;
+
+  /// No description provided for @locationUnavailableMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t get your current location'**
+  String get locationUnavailableMessage;
 
   /// No description provided for @shippingStandard.
   ///

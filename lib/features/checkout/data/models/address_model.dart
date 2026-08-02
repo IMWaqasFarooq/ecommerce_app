@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../domain/entities/address.dart';
+import '../../domain/entities/address_type.dart';
 
 part 'address_model.freezed.dart';
 part 'address_model.g.dart';
@@ -8,13 +9,16 @@ part 'address_model.g.dart';
 @freezed
 abstract class AddressModel with _$AddressModel {
   const factory AddressModel({
+    required String id,
+    required AddressType type,
+    required String streetArea,
+    double? latitude,
+    double? longitude,
+    required String apartmentOrVilla,
+    String? buildingOrCluster,
+    String? directions,
+    String? nickname,
     required String fullName,
-    required String line1,
-    String? line2,
-    required String city,
-    required String state,
-    required String postalCode,
-    required String country,
     required String phone,
   }) = _AddressModel;
 
@@ -23,26 +27,32 @@ abstract class AddressModel with _$AddressModel {
 
 extension AddressModelMapper on AddressModel {
   Address toEntity() => Address(
+    id: id,
+    type: type,
+    streetArea: streetArea,
+    latitude: latitude,
+    longitude: longitude,
+    apartmentOrVilla: apartmentOrVilla,
+    buildingOrCluster: buildingOrCluster,
+    directions: directions,
+    nickname: nickname,
     fullName: fullName,
-    line1: line1,
-    line2: line2,
-    city: city,
-    state: state,
-    postalCode: postalCode,
-    country: country,
     phone: phone,
   );
 }
 
 extension AddressEntityMapper on Address {
   AddressModel toModel() => AddressModel(
+    id: id,
+    type: type,
+    streetArea: streetArea,
+    latitude: latitude,
+    longitude: longitude,
+    apartmentOrVilla: apartmentOrVilla,
+    buildingOrCluster: buildingOrCluster,
+    directions: directions,
+    nickname: nickname,
     fullName: fullName,
-    line1: line1,
-    line2: line2,
-    city: city,
-    state: state,
-    postalCode: postalCode,
-    country: country,
     phone: phone,
   );
 }

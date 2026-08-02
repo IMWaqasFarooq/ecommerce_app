@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
+import '../../l10n/generated/app_localizations.dart';
+
 const _easternArabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
 
 String _localeTag(BuildContext context) => Localizations.localeOf(context).toString();
@@ -47,4 +49,12 @@ String formatDateTime(BuildContext context, DateTime date) {
     context,
     DateFormat.yMMMd(_localeTag(context)).add_jm().format(date),
   );
+}
+
+String formatDistance(BuildContext context, double meters) {
+  final l10n = AppLocalizations.of(context);
+  if (meters < 1000) {
+    return l10n.distanceMeters(formatDecimal(context, meters.round()));
+  }
+  return l10n.distanceKilometers(formatDecimal(context, meters / 1000, decimalDigits: 1));
 }
