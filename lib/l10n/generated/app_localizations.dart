@@ -1184,6 +1184,36 @@ abstract class AppLocalizations {
   /// **'Authentication failed'**
   String get errorAuthGeneric;
 
+  /// No description provided for @viewMoreAction.
+  ///
+  /// In en, this message translates to:
+  /// **'View more'**
+  String get viewMoreAction;
+
+  /// No description provided for @trendingSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trending'**
+  String get trendingSectionTitle;
+
+  /// No description provided for @youMayLikeSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You may like'**
+  String get youMayLikeSectionTitle;
+
+  /// No description provided for @discountBannerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to {percent}% off'**
+  String discountBannerLabel(String percent);
+
+  /// No description provided for @shopSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop'**
+  String get shopSectionTitle;
+
   /// No description provided for @unknownUser.
   ///
   /// In en, this message translates to:

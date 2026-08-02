@@ -194,5 +194,14 @@
   "errorAuthNetworkRequestFailed": "خطأ في الشبكة، تحقق من اتصالك",
   "errorAuthGeneric": "فشلت عملية المصادقة",
 
+  "viewMoreAction": "عرض المزيد",
+  "trendingSectionTitle": "الأكثر رواجًا",
+  "youMayLikeSectionTitle": "قد يعجبك",
+  "discountBannerLabel": "خصم يصل إلى {percent}%",
+  "@discountBannerLabel": {
+    "placeholders": { "percent": { "type": "String" } }
+  },
+  "shopSectionTitle": "المتجر",
+
   "unknownUser": "غير معروف"
 }

@@ -230,5 +230,14 @@
   "errorAuthNetworkRequestFailed": "Network error, check your connection",
   "errorAuthGeneric": "Authentication failed",
 
+  "viewMoreAction": "View more",
+  "trendingSectionTitle": "Trending",
+  "youMayLikeSectionTitle": "You may like",
+  "discountBannerLabel": "Up to {percent}% off",
+  "@discountBannerLabel": {
+    "placeholders": { "percent": { "type": "String" } }
+  },
+  "shopSectionTitle": "Shop",
+
   "unknownUser": "Unknown"
 }

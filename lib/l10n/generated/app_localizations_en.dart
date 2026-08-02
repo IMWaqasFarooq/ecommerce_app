@@ -613,5 +613,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorAuthGeneric => 'Authentication failed';
 
   @override
+  String get viewMoreAction => 'View more';
+
+  @override
+  String get trendingSectionTitle => 'Trending';
+
+  @override
+  String get youMayLikeSectionTitle => 'You may like';
+
+  @override
+  String discountBannerLabel(String percent) {
+    return 'Up to $percent% off';
+  }
+
+  @override
+  String get shopSectionTitle => 'Shop';
+
+  @override
   String get unknownUser => 'Unknown';
 }

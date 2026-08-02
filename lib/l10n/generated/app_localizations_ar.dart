@@ -624,5 +624,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get errorAuthGeneric => 'فشلت عملية المصادقة';
 
   @override
+  String get viewMoreAction => 'عرض المزيد';
+
+  @override
+  String get trendingSectionTitle => 'الأكثر رواجًا';
+
+  @override
+  String get youMayLikeSectionTitle => 'قد يعجبك';
+
+  @override
+  String discountBannerLabel(String percent) {
+    return 'خصم يصل إلى $percent%';
+  }
+
+  @override
+  String get shopSectionTitle => 'المتجر';
+
+  @override
   String get unknownUser => 'غير معروف';
 }

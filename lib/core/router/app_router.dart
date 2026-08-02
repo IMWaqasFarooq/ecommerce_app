@@ -12,8 +12,10 @@ import '../../features/checkout/presentation/pages/address_map_picker_page.dart'
 import '../../features/checkout/presentation/pages/addresses_page.dart';
 import '../../features/checkout/presentation/pages/checkout_page.dart';
 import '../../features/checkout/presentation/pages/order_confirmation_page.dart';
+import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/orders/presentation/pages/order_detail_page.dart';
 import '../../features/orders/presentation/pages/orders_list_page.dart';
+import '../../features/products/domain/entities/product_sort.dart';
 import '../../features/products/presentation/pages/product_detail_page.dart';
 import '../../features/products/presentation/pages/product_list_page.dart';
 import '../../features/profile/presentation/pages/about_page.dart';
@@ -75,6 +77,22 @@ GoRouter router(Ref ref) {
         builder: (context, state) => const SearchPage(),
       ),
       GoRoute(
+        path: RoutePaths.products,
+        name: RouteNames.products,
+        builder: (context, state) {
+          final category = state.uri.queryParameters['category'];
+          final sortParam = state.uri.queryParameters['sort'];
+          ProductSort? sort;
+          for (final value in ProductSort.values) {
+            if (value.name == sortParam) {
+              sort = value;
+              break;
+            }
+          }
+          return ProductListPage(initialCategory: category, initialSort: sort);
+        },
+      ),
+      GoRoute(
         path: RoutePaths.productDetail,
         name: RouteNames.productDetail,
         builder: (context, state) =>
@@ -130,7 +148,7 @@ GoRouter router(Ref ref) {
               GoRoute(
                 path: RoutePaths.home,
                 name: RouteNames.home,
-                builder: (context, state) => const ProductListPage(),
+                builder: (context, state) => const HomePage(),
               ),
             ],
           ),

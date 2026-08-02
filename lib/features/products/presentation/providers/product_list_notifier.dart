@@ -15,8 +15,13 @@ const _perPage = 20;
 class ProductListNotifier extends _$ProductListNotifier {
   @override
   ProductListState build() {
-    Future.microtask(refresh);
-    return const ProductListState();
+    const initial = ProductListState();
+    Future.microtask(() {
+      // Skip the default refresh if something (e.g. an initial category/sort
+      // applied by the caller right after build) already mutated the state.
+      if (state == initial) refresh();
+    });
+    return initial;
   }
 
   Future<void> refresh() => _load(page: 1);

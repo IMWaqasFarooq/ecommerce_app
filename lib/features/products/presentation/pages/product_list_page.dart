@@ -9,6 +9,7 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../../categories/presentation/providers/categories_provider.dart';
 import '../../../categories/presentation/widgets/category_chip.dart';
 import '../../domain/entities/product_filter.dart';
+import '../../domain/entities/product_sort.dart';
 import '../providers/product_list_notifier.dart';
 import '../providers/product_list_state.dart';
 import '../widgets/filter_bottom_sheet.dart';
@@ -18,7 +19,10 @@ import '../widgets/sort_bottom_sheet.dart';
 import '../widgets/sort_filter_pill.dart';
 
 class ProductListPage extends ConsumerStatefulWidget {
-  const ProductListPage({super.key});
+  const ProductListPage({this.initialCategory, this.initialSort, super.key});
+
+  final String? initialCategory;
+  final ProductSort? initialSort;
 
   @override
   ConsumerState<ProductListPage> createState() => _ProductListPageState();
@@ -31,6 +35,18 @@ class _ProductListPageState extends ConsumerState<ProductListPage> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    if (widget.initialCategory != null || widget.initialSort != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final notifier = ref.read(productListProvider.notifier);
+        if (widget.initialCategory != null) {
+          notifier.selectCategory(widget.initialCategory);
+        }
+        if (widget.initialSort != null) {
+          notifier.changeSort(widget.initialSort!);
+        }
+      });
+    }
   }
 
   @override
@@ -52,9 +68,22 @@ class _ProductListPageState extends ConsumerState<ProductListPage> {
     final state = ref.watch(productListProvider);
     final categoriesAsync = ref.watch(categoriesProvider);
 
+    final selectedCategory = state.selectedCategory;
+    String? categoryLabel;
+    if (selectedCategory != null) {
+      final categories = categoriesAsync.value ?? const [];
+      for (final category in categories) {
+        if (category.slug == selectedCategory) {
+          categoryLabel = category.name;
+          break;
+        }
+      }
+    }
+    final title = categoryLabel ?? l10n.shopSectionTitle;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Velora'),
+        title: Text(title),
         actions: [
           IconButton(
             icon: const Icon(Icons.search_rounded),

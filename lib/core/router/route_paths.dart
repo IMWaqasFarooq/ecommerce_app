@@ -1,8 +1,11 @@
+import '../../features/products/domain/entities/product_sort.dart';
+
 abstract final class RoutePaths {
   static const splash = '/splash';
   static const login = '/login';
   static const signup = '/signup';
   static const home = '/';
+  static const products = '/products';
   static const productDetail = '/product/:productId';
   static const search = '/search';
   static const cart = '/cart';
@@ -20,6 +23,15 @@ abstract final class RoutePaths {
   static String productDetailPath(String productId) => '/product/$productId';
   static String orderConfirmationPath(String orderId) => '/checkout/confirmation/$orderId';
   static String orderDetailPath(String orderId) => '/orders/$orderId';
+
+  static String productsPath({String? category, ProductSort? sort}) {
+    final queryParameters = <String, String>{
+      'category': ?category,
+      if (sort != null) 'sort': sort.name,
+    };
+    if (queryParameters.isEmpty) return products;
+    return Uri(path: products, queryParameters: queryParameters).toString();
+  }
 }
 
 abstract final class RouteNames {
@@ -27,6 +39,7 @@ abstract final class RouteNames {
   static const login = 'login';
   static const signup = 'signup';
   static const home = 'home';
+  static const products = 'products';
   static const productDetail = 'productDetail';
   static const search = 'search';
   static const cart = 'cart';
