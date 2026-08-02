@@ -1,10 +1,9 @@
 # Velora
 
-An enterprise-grade e-commerce app built with Flutter, showcasing production mobile
-architecture on a different stack than a typical portfolio piece: feature-first Clean
-Architecture, Riverpod (code-generated) state management, real Firebase Authentication
-(Google/Apple/email), and real Stripe payments behind a server-verified Cloud Function —
-no mocked backend anywhere in the stack.
+An enterprise-grade e-commerce app built with Flutter — a production mobile architecture
+showcase rather than a CRUD demo: feature-first Clean Architecture, code-generated Riverpod
+state management, real Firebase Authentication (Google/Apple/email), and real Stripe
+payments behind a server-verified Cloud Function. No mocked backend anywhere in the stack.
 
 Product data comes from the [DummyJSON](https://dummyjson.com) REST API (free, keyless).
 Payments run against Stripe **test mode**.
@@ -15,25 +14,54 @@ iOS and Android only, by design — the app leans on native Google/Apple sign-in
 platform Keychain/Keystore-backed session storage, push notifications, and a bottom-nav
 mobile layout that wouldn't translate to web/desktop without real rework.
 
+## Screenshots
+
+<table>
+<tr>
+<td><img src="docs/screenshots/home.png" width="220" alt="Home — auto-sliding discount banners, trending and category rows"/></td>
+<td><img src="docs/screenshots/product-detail.png" width="220" alt="Product detail — image carousel, ratings, reviews"/></td>
+<td><img src="docs/screenshots/cart.png" width="220" alt="Cart — quantity controls, coupon codes"/></td>
+<td><img src="docs/screenshots/rtl-arabic.png" width="220" alt="Full RTL mirroring in Arabic — layout, nav, and numerals all flip"/></td>
+</tr>
+<tr>
+<td align="center">Home</td>
+<td align="center">Product detail</td>
+<td align="center">Cart</td>
+<td align="center">Arabic (RTL)</td>
+</tr>
+</table>
+
+The last shot is doing more than swapping strings: the nav bar, category chips, and grid all
+mirror direction, and numerals switch to Arabic-Indic digits — see [Localization](#localization--rtl).
+
 ## Features
 
+- **Home** — a discovery landing page: auto-sliding promo banners generated from live
+  per-category discount data (no hardcoded promo content — see
+  [`home_curation.dart`](lib/features/home/domain/services/home_curation.dart)), a trending
+  row, a few category-spotlight rows, and a "you may like" row, each with a "View more" that
+  opens the product grid pre-filtered.
 - **Authentication** — Firebase Auth with real Google Sign-In, real Sign in with Apple, and
   email/password, session persisted natively by the Firebase SDK. Guest cart/wishlist
   contents merge into the account automatically on sign-in.
-- **Products** — paginated, infinite-scroll catalog with category filtering, pull-to-refresh,
-  skeleton loading, and a detail page with an image carousel, ratings, reviews, and related
-  products.
+- **Products** — paginated, infinite-scroll catalog with category filtering, sorting, pull-
+  to-refresh, skeleton loading, and a detail page with an image carousel, ratings, reviews,
+  and related products.
 - **Search** — debounced live search with persisted history and suggestions.
 - **Cart** — offline-first, quantity management, a small server-side-configurable coupon
   catalog (`SAVE10` / `SAVE20` / `WELCOME15`).
 - **Wishlist** — offline-first, synced the same way as the cart on sign-in.
 - **Checkout** — cart → address → shipping → payment, with a real Stripe PaymentSheet charge
-  behind a `PaymentGateway` abstraction (see [Payments](#payments) below).
+  behind a `PaymentGateway` abstraction (see [Payments](#payments) below). Addresses support
+  both a Google Maps pin-drop picker (reverse-geocoded) and manual entry, with Home/Work/
+  Other types.
 - **Orders** — history, detail with a visual tracking stepper (processing → shipped →
   delivered, or cancelled), and cancellation while an order is still processing.
 - **Observability** — Crashlytics error reporting, an analytics funnel (sign_up → login →
   search → view_item → add_to_cart → begin_checkout → purchase), FCM + local notifications,
   and one live Remote Config feature flag (`coupons_enabled`).
+- **Localization** — English and Arabic, including full RTL layout mirroring and
+  locale-aware digit formatting (see [below](#localization--rtl)).
 
 ## Architecture
 
@@ -109,6 +137,21 @@ fetches that secret over an authenticated request, then drives Stripe's native
 `PaymentSheet` UI to collect card details and confirm the charge — card details never pass
 through this app's own code.
 
+### Localization / RTL
+
+English and Arabic are both first-class, not an afterthought bolted on at the end:
+
+- Every user-facing string routes through `AppLocalizations` (ARB-generated) — there's no
+  hardcoded English string left in a widget for a translator to miss.
+- Layout direction follows the locale automatically (`Directionality` from `MaterialApp`),
+  so the bottom nav, category chip row, list alignment, and icons that imply direction
+  (back chevrons, forward arrows) all mirror correctly in Arabic without per-widget RTL
+  branching.
+- Numbers are locale-formatted, not just translated strings around a raw `double` —
+  prices, ratings, distances, and dates render in Arabic-Indic digits under `ar`, via a
+  small `locale_formatting.dart` helper rather than scattering `NumberFormat` calls
+  through the UI layer.
+
 ### Dependency injection
 
 Composition happens through plain Riverpod `Provider`s per feature (e.g.
@@ -117,21 +160,74 @@ at the edges in tests — no service locator.
 
 ## Tech stack
 
-Each pick names the alternative it was weighed against, as a trade-off rather than a
-verdict:
+Every one of these is a real trade-off, not a default — the reasoning below is the version
+of "why" a lead would give in a design review: what the project actually needed, and what
+that choice costs.
 
-| Concern | Choice | Why, over the alternative |
-|---|---|---|
-| State management | `flutter_riverpod` + `riverpod_generator` | Vs. Bloc: compile-safe, code-generated providers cut the boilerplate a full Bloc/Event/State setup needs for simple state, and `Provider` families make parameterized caching (`productDetail(id)`) trivial without a custom cache key scheme. Bloc's explicit event log is nicer for auditing complex multi-step flows, but this app's flows (pagination, debounced search, a payment state machine) map cleanly onto `Notifier`/`AsyncNotifier` without needing that. |
-| Immutable models | `freezed` | Generates `copyWith`/equality/union variants for state and the `Failure` type, which is the boilerplate that rots fastest by hand. Pinned to a `3.2.6-dev` prerelease here specifically because `riverpod_generator 4.x` needs `analyzer ^12.0.0`, which stable `freezed` (at the time of writing) caps below. |
-| DI | Riverpod `Provider`s | Vs. `get_it`: no service locator, no runtime string/type lookup — composition is just providers depending on providers, and overriding a dependency in a test is a one-line `overrideWithValue`. |
-| Networking | `dio` | A real interceptor pipeline (auth header injection from the current Firebase ID token, retry-with-backoff, error normalization to `Failure`, dev-only logging) across every endpoint — `dio` has that built in. |
-| Local persistence | `hive` | What's cached (products, cart, wishlist, addresses, orders, search history) is document-shaped, not relational, so Hive keeps it simple. Cart/wishlist/orders/addresses are all keyed per guest-or-uid, so a signed-out cart merges cleanly into the account on login instead of leaking across users on a shared device. |
-| Functional error handling | `dartz` (`Either`) | Encourages explicit error propagation through `fold` instead of `try/catch` as primary control flow at the presentation boundary. |
-| Routing | `go_router` | `StatefulShellRoute.indexedStack` gives the four bottom-nav tabs independent navigation stacks for free, plus declarative deep-link-ready routes for product/order detail. |
-| Payments | `flutter_stripe` + a Firebase Cloud Function | The alternative — creating PaymentIntents client-side — would require embedding a Stripe secret key in the app binary, which Stripe explicitly warns against; a thin server endpoint is the only safe option. |
-| Auth | Firebase Auth (Google, Apple, email/password) | One SDK for session persistence, token refresh, and provider linking, instead of hand-rolling three separate OAuth flows and a session store. |
-| Observability | Firebase Crashlytics + Analytics + Messaging + Remote Config | One SDK, one project, each wrapped behind a small interface (`AnalyticsService`, `RemoteConfigService`) so tests don't need to know it exists. |
+**State management — `flutter_riverpod` + `riverpod_generator`.**
+This app's state shapes are mostly "fetch → paginate/filter/mutate → re-fetch" (product
+lists, cart, checkout), which map directly onto `Notifier`/`AsyncNotifier` with almost no
+boilerplate once codegen is in the loop. `Provider` families make parameterized caching
+(`productDetail(id)`, `orderDetail(id)`) fall out for free instead of needing a hand-rolled
+cache key. Compile-time provider safety also means a typo in a dependency shows up as a
+build error, not a runtime crash three screens later. The trade-off: Riverpod's implicit
+dependency graph is less self-documenting than Bloc's explicit event log, which matters more
+on a team that wants every state transition auditable — this app's flows aren't complex
+enough for that to outweigh the boilerplate savings.
+
+**Immutable models — `freezed`.**
+Generates `copyWith`/equality/union variants for state classes and the `Failure` type —
+exactly the code that rots fastest and hides the most subtle bugs (a forgotten field in a
+hand-written `==`) when written by hand. Worth noting for anyone cloning this repo: it's
+pinned to a `3.2.6-dev` prerelease specifically because `riverpod_generator 4.x` needs
+`analyzer ^12.0.0`, which stable `freezed` caps below at the time of writing — a real
+constraint of working at the edge of the ecosystem, not a mistake.
+
+**Dependency injection — Riverpod `Provider`s, no service locator.**
+Composition is just providers depending on providers, so the dependency graph is visible in
+the code you're already reading rather than resolved by string/type lookup at runtime.
+Overriding a dependency in a test is a one-line `overrideWithValue` — no separate container
+setup or reset-between-tests ceremony.
+
+**Networking — `dio`.**
+Every request needs the same things: the current Firebase ID token attached, retry with
+backoff, errors normalized into the app's `Failure` union, and request/response logging in
+dev builds only. `dio`'s interceptor pipeline is where that lives once, instead of being
+re-implemented at every call site.
+
+**Local persistence — `hive`.**
+What gets cached — products, cart, wishlist, addresses, orders, search history — is
+document-shaped, not relational, so a key-value store is a better fit than shipping SQLite
+for data that's never queried with a join. Cart/wishlist/orders/addresses are all keyed
+per guest-or-uid, which is what makes a signed-out cart merge cleanly into the account on
+login instead of leaking across users on a shared device.
+
+**Functional error handling — `dartz` (`Either`).**
+Forces every call site to acknowledge both branches via `fold` instead of letting a
+`try/catch` be optional. For a checkout flow specifically, "did this fail, and how" needs to
+be impossible to accidentally ignore.
+
+**Routing — `go_router`.**
+`StatefulShellRoute.indexedStack` gives the four bottom-nav tabs independent navigation
+stacks with almost no code, and the same declarative route table handles deep-link-ready
+product/order detail pages without a parallel imperative `Navigator` setup.
+
+**Payments — `flutter_stripe` + a Firebase Cloud Function.**
+The only alternative to a server-side PaymentIntent is creating it client-side, which means
+embedding a Stripe secret key in the app binary — something Stripe's own docs warn against
+because a decompiled APK/IPA would leak it. A thin server endpoint is the only version of
+this that's actually safe to ship.
+
+**Auth — Firebase Auth (Google, Apple, email/password).**
+One SDK owns session persistence, token refresh, and provider linking across all three
+methods, instead of three separate OAuth implementations and a hand-rolled session store —
+the kind of infrastructure that's easy to get subtly wrong once (token refresh races,
+session restoration on cold start) and expensive to debug later.
+
+**Observability — Firebase Crashlytics + Analytics + Messaging + Remote Config.**
+One project, one SDK surface, each wrapped behind a small interface (`AnalyticsService`,
+`RemoteConfigService`) so the rest of the app — and every test — depends on an abstraction,
+not a vendor SDK directly.
 
 ## Project structure
 
@@ -141,6 +237,7 @@ lib/
     analytics/            # AnalyticsService interface + Firebase impl, auth-change observer
     config/                # Flavors, env loading
     error/                 # Failure union, exception mapping
+    formatting/             # Locale-aware number/date/distance formatting
     network/                # Dio client + interceptors
     notifications/          # FCM + local notifications
     providers/               # Cross-cutting Riverpod providers (Firebase, Dio, Hive boxes)
@@ -151,6 +248,7 @@ lib/
     theme/                        # Material 3 theme, spacing/text-style scales
     usecase/                      # UseCase<Result, Params> base type
   features/
+    home/                   # Discovery landing page: banners, trending, spotlights
     authentication/
     products/
     categories/
@@ -179,6 +277,9 @@ integration_test/           # End-to-end flows driven on a real device/simulator
   email/password providers enabled), and the **Blaze** billing plan if you want live payments
   (Cloud Functions need it to call the Stripe API)
 - A [Stripe](https://stripe.com) account (test mode is enough)
+- Optionally, a [Google Maps](https://console.cloud.google.com/google/maps-apis) API key for
+  the map-based address picker — the app degrades gracefully to manual address entry without
+  one
 
 ### Setup
 
@@ -221,11 +322,12 @@ flutter run -t lib/main_production.dart    # production flavor
 
 ## Testing
 
-**46 unit/Riverpod-provider/widget tests** (mocktail) covering repository cache-fallback
+**84 unit/Riverpod-provider/widget tests** (mocktail) covering repository cache-fallback
 logic, use cases, notifier state machines (pagination, debounce, the checkout
-payment/order flow), and key widgets, plus a real end-to-end **integration test** that signs
-up a real Firebase account, verifies the product catalog loads from the live DummyJSON API,
-and signs out — driven on an iOS simulator, not mocked.
+payment/order flow, deep-link category/sort wiring), the discount-banner/spotlight curation
+logic, and key widgets — plus a real end-to-end **integration test** that signs up a real
+Firebase account, verifies the product catalog loads from the live DummyJSON API, and signs
+out, driven on an iOS simulator, not mocked.
 
 ```bash
 flutter test                                                 # unit + provider + widget tests
@@ -240,7 +342,7 @@ on every push and pull request, plus a separate job that typechecks the Cloud Fu
 - A real backend-issued order/shipment tracking integration instead of the simulated
   processing → shipped → delivered stepper
 - Apple Pay / Google Pay via Stripe's `PaymentSheet` wallet support
-- Golden-image tests for the product grid and checkout summary
+- Golden-image tests for the product grid, home page, and checkout summary
 - A staging Firebase project + a deploy job in CI for the Cloud Function
 
 ## License
