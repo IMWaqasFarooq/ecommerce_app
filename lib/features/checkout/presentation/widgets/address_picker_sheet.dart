@@ -1,0 +1,70 @@
+import 'package:flutter/material.dart';
+
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../l10n/generated/app_localizations.dart';
+import '../../domain/entities/address.dart';
+import 'address_form_sheet.dart';
+
+typedef AddressPickerResult = ({Address address, bool isNew});
+
+Future<AddressPickerResult?> showAddressPickerSheet(
+  BuildContext context, {
+  required List<Address> addresses,
+  required Address? selected,
+}) {
+  return showModalBottomSheet<AddressPickerResult>(
+    context: context,
+    builder: (context) => _AddressPickerSheet(addresses: addresses, selected: selected),
+  );
+}
+
+class _AddressPickerSheet extends StatelessWidget {
+  const _AddressPickerSheet({required this.addresses, required this.selected});
+
+  final List<Address> addresses;
+  final Address? selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.xs,
+              ),
+              child: Text(
+                l10n.shippingAddressTitle,
+                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+              ),
+            ),
+            for (final address in addresses)
+              ListTile(
+                leading: const Icon(Icons.location_on_outlined),
+                title: Text(address.fullName),
+                subtitle: Text(address.formatted),
+                trailing: address == selected ? const Icon(Icons.check_rounded) : null,
+                onTap: () => Navigator.of(context).pop((address: address, isNew: false)),
+              ),
+            ListTile(
+              leading: const Icon(Icons.add_rounded),
+              title: Text(l10n.addNewAddress),
+              onTap: () async {
+                final address = await showAddressFormSheet(context);
+                if (address != null && context.mounted) {
+                  Navigator.of(context).pop((address: address, isNew: true));
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

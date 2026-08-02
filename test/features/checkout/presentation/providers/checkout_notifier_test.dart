@@ -8,11 +8,11 @@ import 'package:ecommerce_app/features/cart/domain/repositories/cart_repository.
 import 'package:ecommerce_app/features/cart/presentation/providers/cart_notifier.dart';
 import 'package:ecommerce_app/features/cart/presentation/providers/cart_providers.dart';
 import 'package:ecommerce_app/features/checkout/domain/entities/address.dart';
+import 'package:ecommerce_app/features/checkout/domain/entities/payment_method.dart';
 import 'package:ecommerce_app/features/checkout/domain/entities/shipping_method.dart';
 import 'package:ecommerce_app/features/checkout/domain/repositories/address_repository.dart';
 import 'package:ecommerce_app/features/checkout/presentation/providers/address_providers.dart';
 import 'package:ecommerce_app/features/checkout/presentation/providers/checkout_notifier.dart';
-import 'package:ecommerce_app/features/checkout/presentation/providers/checkout_state.dart';
 import 'package:ecommerce_app/features/orders/domain/entities/order.dart';
 import 'package:ecommerce_app/features/orders/domain/entities/order_status.dart';
 import 'package:ecommerce_app/features/orders/domain/repositories/order_repository.dart';
@@ -101,27 +101,27 @@ void main() {
     addTearDown(container.dispose);
   });
 
-  test('build preselects the first saved address', () async {
+  test('build preselects the first saved address and shipping method', () async {
     container.listen(checkoutProvider, (previous, next) {});
 
     final state = await container.read(checkoutProvider.future);
 
     expect(state.selectedAddress, address);
-    expect(state.step, CheckoutStep.address);
+    expect(state.selectedShipping, ShippingMethod.all.first);
+    expect(state.selectedPaymentMethod, PaymentMethod.card);
   });
 
-  test('selecting shipping advances straight to the payment step', () async {
+  test('selectShipping updates the selected shipping method', () async {
     container.listen(checkoutProvider, (previous, next) {});
     await container.read(checkoutProvider.future);
     container.read(cartProvider.notifier);
     container.listen(cartProvider, (previous, next) {});
     await container.read(cartProvider.future);
 
-    container.read(checkoutProvider.notifier).selectShipping(ShippingMethod.all.first);
+    container.read(checkoutProvider.notifier).selectShipping(ShippingMethod.all.last);
 
     final state = container.read(checkoutProvider).value!;
-    expect(state.step, CheckoutStep.payment);
-    expect(state.selectedShipping, ShippingMethod.all.first);
+    expect(state.selectedShipping, ShippingMethod.all.last);
   });
 
   test('placeOrder charges the card, creates the order, and empties the cart on success', () async {
@@ -173,5 +173,32 @@ void main() {
     expect(state.completedOrder, isNull);
     verifyNever(() => orderRepository.createOrder(any()));
     verifyNever(() => cartRepository.clearCart());
+  });
+
+  test('placeOrder with Cash on Delivery creates the order without charging a card', () async {
+    when(() => orderRepository.createOrder(any())).thenAnswer((invocation) async {
+      return Right(invocation.positionalArguments.first as Order);
+    });
+
+    container.listen(checkoutProvider, (previous, next) {});
+    await container.read(checkoutProvider.future);
+    container.listen(cartProvider, (previous, next) {});
+    await container.read(cartProvider.future);
+
+    final notifier = container.read(checkoutProvider.notifier);
+    notifier.selectShipping(ShippingMethod.all.first);
+    notifier.selectPaymentMethod(PaymentMethod.cashOnDelivery);
+    await notifier.placeOrder();
+
+    final state = container.read(checkoutProvider).value!;
+    expect(state.completedOrder, isNotNull);
+    expect(state.isPlacingOrder, isFalse);
+    verifyNever(
+      () => paymentGateway.pay(
+        amountInSmallestUnit: any(named: 'amountInSmallestUnit'),
+        currency: any(named: 'currency'),
+      ),
+    );
+    verify(() => cartRepository.clearCart()).called(1);
   });
 }

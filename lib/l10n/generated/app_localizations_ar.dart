@@ -273,6 +273,40 @@ class AppLocalizationsAr extends AppLocalizations {
   String get placeOrder => 'تأكيد الطلب';
 
   @override
+  String get payWithTitle => 'الدفع باستخدام';
+
+  @override
+  String get paymentMethodCard => 'بطاقة خصم/ائتمان';
+
+  @override
+  String get paymentMethodCashOnDelivery => 'الدفع عند الاستلام';
+
+  @override
+  String get changeAddressAction => 'تغيير';
+
+  @override
+  String get slideToPlaceOrder => 'اسحب لتأكيد الطلب';
+
+  @override
+  String itemsCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString عنصر',
+      many: '$countString عنصرًا',
+      few: '$countString عناصر',
+      two: 'عنصران',
+      one: 'عنصر واحد',
+      zero: 'لا عناصر',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get newAddressTitle => 'عنوان جديد';
 
   @override

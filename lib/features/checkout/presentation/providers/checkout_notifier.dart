@@ -11,6 +11,7 @@ import '../../../orders/presentation/providers/order_providers.dart';
 import '../../../payments/domain/usecases/pay_usecase.dart';
 import '../../../payments/presentation/providers/payment_providers.dart';
 import '../../domain/entities/address.dart';
+import '../../domain/entities/payment_method.dart';
 import '../../domain/entities/shipping_method.dart';
 import 'address_providers.dart';
 import 'checkout_state.dart';
@@ -30,6 +31,7 @@ class CheckoutNotifier extends _$CheckoutNotifier {
     return CheckoutState(
       savedAddresses: addresses,
       selectedAddress: addresses.isEmpty ? null : addresses.first,
+      selectedShipping: ShippingMethod.all.first,
     );
   }
 
@@ -48,27 +50,16 @@ class CheckoutNotifier extends _$CheckoutNotifier {
     });
   }
 
-  void goToShipping() {
-    final current = state.value;
-    if (current == null || current.selectedAddress == null) return;
-    state = AsyncData(current.copyWith(step: CheckoutStep.shipping));
-  }
-
   void selectShipping(ShippingMethod method) {
     final current = state.value;
     if (current == null) return;
-    state = AsyncData(current.copyWith(selectedShipping: method, step: CheckoutStep.payment));
+    state = AsyncData(current.copyWith(selectedShipping: method));
   }
 
-  void goBack() {
+  void selectPaymentMethod(PaymentMethod method) {
     final current = state.value;
     if (current == null) return;
-    final previous = switch (current.step) {
-      CheckoutStep.address => CheckoutStep.address,
-      CheckoutStep.shipping => CheckoutStep.address,
-      CheckoutStep.payment => CheckoutStep.shipping,
-    };
-    state = AsyncData(current.copyWith(step: previous));
+    state = AsyncData(current.copyWith(selectedPaymentMethod: method));
   }
 
   Future<void> placeOrder() async {
@@ -83,14 +74,17 @@ class CheckoutNotifier extends _$CheckoutNotifier {
     state = AsyncData(current.copyWith(isPlacingOrder: true, failure: null));
 
     final total = cart.total + shipping.cost;
-    final payResult = await ref.read(payUseCaseProvider)(
-      PayParams(amountInSmallestUnit: (total * 100).round(), currency: 'usd'),
-    );
 
-    final failure = payResult.fold((failure) => failure, (_) => null);
-    if (failure != null) {
-      state = AsyncData(current.copyWith(isPlacingOrder: false, failure: failure));
-      return;
+    if (current.selectedPaymentMethod == PaymentMethod.card) {
+      final payResult = await ref.read(payUseCaseProvider)(
+        PayParams(amountInSmallestUnit: (total * 100).round(), currency: 'usd'),
+      );
+
+      final failure = payResult.fold((failure) => failure, (_) => null);
+      if (failure != null) {
+        state = AsyncData(current.copyWith(isPlacingOrder: false, failure: failure));
+        return;
+      }
     }
 
     final order = Order(

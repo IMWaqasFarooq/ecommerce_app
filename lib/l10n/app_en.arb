@@ -99,6 +99,15 @@
     "placeholders": { "method": { "type": "String" } }
   },
   "placeOrder": "Place order",
+  "payWithTitle": "Pay with",
+  "paymentMethodCard": "Debit/Credit Card",
+  "paymentMethodCashOnDelivery": "Cash on Delivery",
+  "changeAddressAction": "Change",
+  "slideToPlaceOrder": "Slide to place order",
+  "itemsCount": "{count, plural, one{{count} item} other{{count} items}}",
+  "@itemsCount": {
+    "placeholders": { "count": { "type": "int", "format": "decimalPattern" } }
+  },
   "newAddressTitle": "New address",
   "addressLineLabel": "Address line",
   "cityLabel": "City",

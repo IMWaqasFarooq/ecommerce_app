@@ -269,6 +269,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get placeOrder => 'Place order';
 
   @override
+  String get payWithTitle => 'Pay with';
+
+  @override
+  String get paymentMethodCard => 'Debit/Credit Card';
+
+  @override
+  String get paymentMethodCashOnDelivery => 'Cash on Delivery';
+
+  @override
+  String get changeAddressAction => 'Change';
+
+  @override
+  String get slideToPlaceOrder => 'Slide to place order';
+
+  @override
+  String itemsCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString items',
+      one: '$countString item',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get newAddressTitle => 'New address';
 
   @override

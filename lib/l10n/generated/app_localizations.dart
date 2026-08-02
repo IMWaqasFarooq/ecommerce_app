@@ -560,6 +560,42 @@ abstract class AppLocalizations {
   /// **'Place order'**
   String get placeOrder;
 
+  /// No description provided for @payWithTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay with'**
+  String get payWithTitle;
+
+  /// No description provided for @paymentMethodCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Debit/Credit Card'**
+  String get paymentMethodCard;
+
+  /// No description provided for @paymentMethodCashOnDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash on Delivery'**
+  String get paymentMethodCashOnDelivery;
+
+  /// No description provided for @changeAddressAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get changeAddressAction;
+
+  /// No description provided for @slideToPlaceOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Slide to place order'**
+  String get slideToPlaceOrder;
+
+  /// No description provided for @itemsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} item} other{{count} items}}'**
+  String itemsCount(int count);
+
   /// No description provided for @newAddressTitle.
   ///
   /// In en, this message translates to:
